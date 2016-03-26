@@ -34,7 +34,7 @@ var game =
 
 			button.draw =
 			{
-				normal: { box: [{ fill: '#000', h: 0.1, w: 0.1, x: 0.5, y: 0.5, z: 2 }] },
+				normal: { box: [ button ]},
 				show: 'normal'
 			};
 
@@ -80,12 +80,13 @@ var game =
 									var fill = call.fill;
 									var stroke = call.stroke;
 
-									var a = call.a * game.data.canvas.width;
-									var b = call.b * game.data.canvas.height;
-									var h = call.h * game.data.canvas.height;
-									var w = call.w * game.data.canvas.width;
-									var x = call.x * game.data.canvas.width;
-									var y = call.y * game.data.canvas.height;
+									var h = (call.hk) ? call.hk * call.w * game.data.canvas.width : call.h * game.data.canvas.height;
+									var w = (call.wk) ? call.wk * call.h * game.data.canvas.height : call.w * game.data.canvas.width;
+
+									call.xk = call.xk || 0;
+									call.yk = call.yk || 0;
+									var x = call.x * game.data.canvas.width - call.xk * w;
+									var y = call.y * game.data.canvas.height - call.yk * h;
 
 									switch (type)
 									{
@@ -119,14 +120,14 @@ var game =
 			game.create.window = window;
 			game.create.canvas = {};
 			game.create.event = game.option.event.list;
-			game.create.button = {};
+			game.create.button = { fill: '#fff', hk: 1, w: 0.1, x: 0.5, xk: 0.5, y: 0.5, yk: 0.5, z: 1 };
 		};
 	},
 
 	option:
 	{
 		body: { css: { background: '#bbb', margin: 0 }},
-		canvas: { css: { position: 'absolute' }, z: 5 },
+		canvas: { css: { position: 'absolute' }, z: 3 },
 		event: { list: [ 'click', 'resize', 'tick' ]},
 		tick: 100
 	},
