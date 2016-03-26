@@ -77,16 +77,23 @@ var game =
 
 								if (z == call.z)
 								{
+									var H = game.data.canvas.height;
+									var W = game.data.canvas.width;
+
 									var fill = call.fill;
 									var stroke = call.stroke;
 
-									var h = (call.hk) ? call.hk * call.w * game.data.canvas.width : call.h * game.data.canvas.height;
-									var w = (call.wk) ? call.wk * call.h * game.data.canvas.height : call.w * game.data.canvas.width;
+									var h = (call.hk) ? call.hk * call.w * W : call.h * H;
+									var w = (call.wk) ? call.wk * call.h * H : call.w * W;
 
-									call.xk = call.xk || 0;
-									call.yk = call.yk || 0;
-									var x = call.x * game.data.canvas.width - call.xk * w;
-									var y = call.y * game.data.canvas.height - call.yk * h;
+									var xk = call.xk || 0;
+									var yk = call.yk || 0;
+									var x = call.x * W - xk * w;
+									var y = call.y * H - yk * h;
+
+									if (call.line) context.lineWidth = Math.floor (call.line * Math.min (H, W));
+
+									if (!call.real) { h = Math.floor (h); w = Math.floor (w); x = Math.floor (x); y = Math.floor (y); };
 
 									switch (type)
 									{
@@ -120,7 +127,7 @@ var game =
 			game.create.window = window;
 			game.create.canvas = {};
 			game.create.event = game.option.event.list;
-			game.create.button = { fill: '#fff', hk: 1, w: 0.1, x: 0.5, xk: 0.5, y: 0.5, yk: 0.5, z: 1 };
+			game.create.button = { fill: '#fff', hk: 1, line: 0.01, stroke: '#000', w: 0.1, x: 0.5, xk: 0.5, y: 0.5, yk: 0.5, z: 1 };
 		};
 	},
 
