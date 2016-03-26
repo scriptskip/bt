@@ -8,6 +8,7 @@ var game =
 		{
 			canvas = window.document.createElement ('canvas');
 			canvas.context = canvas.getContext ('2d');
+			canvas.draw = true;
 
 			canvas.autosize = function () { canvas.height = window.innerHeight; canvas.width = window.innerWidth; };
 			canvas.clear = function () { canvas.context.clearRect (0, 0, canvas.width, canvas.height); };
@@ -33,8 +34,8 @@ var game =
 
 			button.draw =
 			{
-				normal: { box: [{ h: 0.1, w: 0.1, x: 0.5, y: 0.5, z: 2 }] },
-				state: 'normal'
+				normal: { box: [{ fill: '#000', h: 0.1, w: 0.1, x: 0.5, y: 0.5, z: 2 }] },
+				show: 'normal'
 			};
 
 			button.update = function (event) {};
@@ -55,16 +56,59 @@ var game =
 
 	draw: function ()
 	{
-		for (var z = 0; z < game.option.canvas.z; z++)
+		if (game.data.canvas.draw)
 		{
-			for (var id = game.data.object.length; id--;)
+			var context = game.data.canvas.context;
+			for (var z = 0; z < game.option.canvas.z; z++)
 			{
-				var draw = game.data.object[id].draw;
-				if (draw.z == z)
+				for (var id = game.data.object.length; id--;)
 				{
+					var object = game.data.object[id];
+					if (object.draw)
+					{
+						var frame = object.draw[object.draw.show];
+						for (var type in frame)
+						{
+							var draw = frame[type];
+							for (var i = draw.length; i--;)
+							{
+								var call = draw[i];
+									call.z = call.z || 0;
 
+								if (z == call.z)
+								{
+									var fill = call.fill;
+									var stroke = call.stroke;
+
+									var a = call.a * game.data.canvas.width;
+									var b = call.b * game.data.canvas.height;
+									var h = call.h * game.data.canvas.height;
+									var w = call.w * game.data.canvas.width;
+									var x = call.x * game.data.canvas.width;
+									var y = call.y * game.data.canvas.height;
+
+									switch (type)
+									{
+										case 'box':
+											if (fill)
+											{
+												context.fillStyle = fill;
+												context.fillRect (x, y, w, h);
+											};
+											if (stroke)
+											{
+												context.strokeStyle = stroke;
+												context.strokeRect (x, y, w, h);
+											};
+										break;
+									};
+								};
+							};
+						};
+					};
 				};
 			};
+			game.data.canvas.draw = false;
 		};
 	},
 
