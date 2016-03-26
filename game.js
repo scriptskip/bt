@@ -73,8 +73,8 @@ var game =
 
 			button.draw =
 			{
-				box: { box: [ button ]},
-				ring: { ring: [ button ]},
+				box: { box: [ button ], text: [ button.text ]},
+				ring: { ring: [ button ], text: [ button.text ]},
 				show: button.type
 			};
 
@@ -95,9 +95,20 @@ var game =
 		{
 			Object.defineProperties ( window, { 'log': { set: function (log) { window.console.log (log); } }, 'ontick': { set: function (f) { window.clock = window.setInterval ( function () { f ({ tick: window.tick, time: window.time, type: 'tick' }); window.time += window.tick; }); }}, 'tick': { value: game.option.tick, writable: true }, 'time': { value: 0, writable: true }});
 
-			window.h = function (o) { return (o.hk) ? o.hk * o.w * game.data.canvas.width : o.h * game.data.canvas.height; };
+			window.font = function (o) { return o.font * game.data.canvas.height; };
+			window.h = function (o)
+			{
+				var h = o.h || 2 * o.r || window.font (o);
+				var w = o.w || 2 * o.r || game.data.canvas.context.measureText (o.text).width;
+				return (o.hk) ? o.hk * w * game.data.canvas.width : h * game.data.canvas.height;
+			};
 			window.r = function (o) { return o.r * Math.min (game.data.canvas.height, game.data.canvas.width); };
-			window.w = function (o) { return (o.wk) ? o.wk * o.h * game.data.canvas.height : o.w * game.data.canvas.width; };
+			window.w = function (o)
+			{
+				var h = o.h || 2 * o.r || window.font (o);
+				var w = o.w || 2 * o.r || game.data.canvas.context.measureText (o.text).width;
+				return (o.wk) ? o.wk * h * game.data.canvas.height : w * game.data.canvas.width;
+			};
 			window.x = function (o) { var xk = o.xk || 0; return o.x * game.data.canvas.width - xk * window.w (o); };
 			window.y = function (o) { var yk = o.yk || 0; return o.y * game.data.canvas.height - yk * window.h (o); };
 
@@ -135,22 +146,26 @@ var game =
 							var draw = frame[type];
 							for (var i = draw.length; i--;)
 							{
-								var call = draw[i];
+								var call = draw[i] || {};
 									call.z = call.z || 0;
 
 								if (z == call.z)
 								{
-									var H = game.data.canvas.height; var W = game.data.canvas.width;
+									var cos = call.cos || 2 * Math.PI; var sin = call.sin || 0;
 									var fill = call.fill; var stroke = call.stroke;
+									var font = window.font (call);
+									var H = game.data.canvas.height; var W = game.data.canvas.width;
 									var h = window.h (call); var r = window.r (call); var w = window.w (call);
-									var sin = call.sin || 0; var cos = call.cos || 2 * Math.PI;
+									var t = call.text;
 									var x = window.x (call); var y = window.y (call);
 
-									if (fill) c.fillStyle = fill;
+									if (call.align) c.textAlign = call.align;
+									if (call.baseline) c.textBaseline = call.baseline;
 									if (call.line) c.lineWidth = Math.floor (call.line * Math.min (H, W));
+									if (call.real == undefined) { font = Math.floor(font); h = Math.floor (h); w = Math.floor (w); x = Math.floor (x); y = Math.floor (y); };
+									if (fill) c.fillStyle = fill;
+									if (font) c.font = font + 'px ' + game.option.font.face;
 									if (stroke) c.strokeStyle = stroke;
-
-									if (call.real == true) { h = Math.floor (h); w = Math.floor (w); x = Math.floor (x); y = Math.floor (y); };
 
 									switch (type)
 									{
@@ -162,6 +177,11 @@ var game =
 										case 'ring':
 											if (fill) { c.arc (x, y, r, sin, cos); c.fill (); };
 											if (stroke) { c.arc (x, y, r, sin, cos); c.stroke (); };
+										break;
+
+										case 'text':
+											if (fill) { c.fillText (t, x, y); };
+											if (stroke) { c.strokeText (t, x, y); };
 										break;
 									};
 								};
@@ -181,7 +201,7 @@ var game =
 			game.create.window = window;
 			game.create.canvas = {};
 			game.create.event = game.option.event.list;
-			game.create.button = { color: '#ccc', fill: '#ccc', frame: '#bbb', hk: 1, line: 0.01, r: 0.1, type: 'ring', w: 0.1, x: 0.5, xk: 0.5, y: 0.5, yk: 0.5, z: 1 };
+			game.create.button = { color: '#ccc', fill: '#ccc', frame: '#bbb', hk: 1, line: 0.01, r: 0.1, text: { align: 'center', baseline: 'middle', fill: '#500', font: 0.1, text: 'button', x: 0.5, y: 0.5, z: 2 }, type: 'box', w: 0.1, x: 0.5, xk: 0.5, y: 0.5, yk: 0.5, z: 1 };
 		};
 	},
 
@@ -190,6 +210,7 @@ var game =
 		body: { css: { background: '#bbb', margin: 0 }},
 		canvas: { css: { position: 'absolute' }, z: 3 },
 		event: { list: [ 'click', 'mousemove', 'resize', 'tick' ]},
+		font: { face: 'Arial', size: 0.1 },
 		tick: 100
 	},
 
