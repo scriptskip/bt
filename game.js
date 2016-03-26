@@ -201,7 +201,7 @@ var game =
 			game.create.window = window;
 			game.create.canvas = {};
 			game.create.event = game.option.event.list;
-			game.create.button = { color: '#ccc', fill: '#ccc', frame: '#bbb', hk: 1, line: 0.01, r: 0.1, text: { align: 'center', baseline: 'middle', fill: '#500', font: 0.1, text: 'button', x: 0.5, y: 0.5, z: 2 }, type: 'box', w: 0.1, x: 0.5, xk: 0.5, y: 0.5, yk: 0.5, z: 1 };
+			game.create.button = { color: '#ccc', fill: '#ccc', frame: '#bbb', hk: 1, line: 0.01, r: 0.1, text: { align: 'center', baseline: 'middle', fill: '#500', font: 0.1, text: 'button', x: 0.5, y: 0.5, z: 2 }, type: 'ring', w: 0.1, x: 0.5, xk: 0, y: 0.5, yk: 0, z: 1 };
 		};
 	},
 
