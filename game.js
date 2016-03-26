@@ -34,8 +34,9 @@ var game =
 
 			button.draw =
 			{
-				normal: { box: [ button ]},
-				show: 'normal'
+				box: { box: [ button ]},
+				ring: { ring: [ button ]},
+				show: 'ring'
 			};
 
 			button.update = function (event) {};
@@ -84,30 +85,33 @@ var game =
 									var stroke = call.stroke;
 
 									var h = (call.hk) ? call.hk * call.w * W : call.h * H;
+									var r = call.r * Math.min (H, W);
 									var w = (call.wk) ? call.wk * call.h * H : call.w * W;
+
+									var sin = call.sin || 0;
+									var cos = call.cos || 2 * Math.PI;
 
 									var xk = call.xk || 0;
 									var yk = call.yk || 0;
 									var x = call.x * W - xk * w;
 									var y = call.y * H - yk * h;
 
+									if (fill) context.fillStyle = fill;
 									if (call.line) context.lineWidth = Math.floor (call.line * Math.min (H, W));
+									if (stroke) context.strokeStyle = stroke;
 
 									if (!call.real) { h = Math.floor (h); w = Math.floor (w); x = Math.floor (x); y = Math.floor (y); };
 
 									switch (type)
 									{
 										case 'box':
-											if (fill)
-											{
-												context.fillStyle = fill;
-												context.fillRect (x, y, w, h);
-											};
-											if (stroke)
-											{
-												context.strokeStyle = stroke;
-												context.strokeRect (x, y, w, h);
-											};
+											if (fill) context.fillRect (x, y, w, h);
+											if (stroke) context.strokeRect (x, y, w, h);
+										break;
+
+										case 'ring':
+											if (fill) { context.arc (x, y, r, sin, cos); context.fill (); };
+											if (stroke) { context.arc (x, y, r, sin, cos); context.stroke (); };
 										break;
 									};
 								};
@@ -127,7 +131,7 @@ var game =
 			game.create.window = window;
 			game.create.canvas = {};
 			game.create.event = game.option.event.list;
-			game.create.button = { fill: '#fff', hk: 1, line: 0.01, stroke: '#000', w: 0.1, x: 0.5, xk: 0.5, y: 0.5, yk: 0.5, z: 1 };
+			game.create.button = { fill: '#fff', hk: 1, line: 0.01, r: 0.1, stroke: '#000', w: 0.1, x: 0.5, xk: 0.5, y: 0.5, yk: 0.5, z: 1 };
 		};
 	},
 
