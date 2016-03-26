@@ -14,12 +14,13 @@ var game =
 			canvas.clear = function () { canvas.context.clearRect (0, 0, canvas.width, canvas.height); };
 			canvas.css = function () { for (var name in game.option.canvas.css) canvas.style[name] = game.option.canvas.css[name];};
 			canvas.load = function () { canvas.css (); canvas.autosize (); };
+			canvas.redraw = function () { canvas.clear (); canvas.draw = true; };
 
 			canvas.update = function (event)
 			{
 				switch (event.type)
 				{
-					case 'resize': canvas.autosize (); break;
+					case 'resize': canvas.autosize (); canvas.draw = true; break;
 				};
 			};
 
@@ -31,6 +32,13 @@ var game =
 		set button (button)
 		{
 			button.id = game.data.object.length;
+
+			button.blossom = button.fill;
+			button.bloom = button.color || button.fill;
+
+			button.border = button.stroke;
+			button.frame = button.frame || button.stroke;
+
 			button.over = false;
 			button.type = button.type || 'box';
 
@@ -40,6 +48,9 @@ var game =
 				{
 					if (!button.over)
 					{
+						if (button.color) button.fill = button.bloom;
+						if (button.frame) button.stroke = button.frame;
+						game.data.canvas.redraw ();
 						game.data.canvas.style.cursor = 'pointer';
 						button.over = true;
 					};
@@ -48,6 +59,9 @@ var game =
 				{
 					if (button.over)
 					{
+						if (button.color) button.fill = button.blossom;
+						if (button.frame) button.stroke = button.border;
+						game.data.canvas.redraw ();
 						game.data.canvas.style.cursor = 'default';
 						button.over = false;
 					};
@@ -93,7 +107,7 @@ var game =
 				switch (t)
 				{
 					case 'box': return ((e.x >= window.x (o)) && (e.x <= window.x (o) + window.w (o)) && (e.y >= window.y (o)) && (e.y <= window.y (o) + window.h (o))); break;
-					case 'ring': var r = Math.sqrt (Math.pow (e.x - window.x (o), 2) + Math.pow (e.y - window.y (o))); return (r <= window.r (o)); break;
+					case 'ring': var r = Math.sqrt (Math.pow (e.x - window.x (o), 2) + Math.pow (e.y - window.y (o), 2)); return (r <= window.r (o)); break;
 				};
 			};
 
@@ -136,7 +150,7 @@ var game =
 									if (call.line) c.lineWidth = Math.floor (call.line * Math.min (H, W));
 									if (stroke) c.strokeStyle = stroke;
 
-									if (!call.real) { h = Math.floor (h); w = Math.floor (w); x = Math.floor (x); y = Math.floor (y); };
+									if (call.real == true) { h = Math.floor (h); w = Math.floor (w); x = Math.floor (x); y = Math.floor (y); };
 
 									switch (type)
 									{
@@ -167,7 +181,7 @@ var game =
 			game.create.window = window;
 			game.create.canvas = {};
 			game.create.event = game.option.event.list;
-			game.create.button = { fill: '#fff', hk: 1, line: 0.01, r: 0.1, stroke: '#000', w: 0.1, x: 0.5, xk: 0.5, y: 0.5, yk: 0.5, z: 1 };
+			game.create.button = { color: '#ccc', fill: '#ccc', frame: '#bbb', hk: 1, line: 0.01, r: 0.1, type: 'ring', w: 0.1, x: 0.5, xk: 0.5, y: 0.5, yk: 0.5, z: 1 };
 		};
 	},
 
