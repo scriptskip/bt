@@ -31,15 +31,46 @@ var game =
 		set button (button)
 		{
 			button.id = game.data.object.length;
+			button.over = false;
+			button.type = button.type || 'box';
+
+			button.active = function (event)
+			{
+				if (window.detect (event, button, button.type))
+				{
+					if (!button.over)
+					{
+						game.data.canvas.style.cursor = 'pointer';
+						button.over = true;
+					};
+				}
+				else
+				{
+					if (button.over)
+					{
+						game.data.canvas.style.cursor = 'default';
+						button.over = false;
+					};
+				};
+			};
+
+			button.in = function () {};
+			button.out = function () {};
 
 			button.draw =
 			{
 				box: { box: [ button ]},
 				ring: { ring: [ button ]},
-				show: 'ring'
+				show: button.type
 			};
 
-			button.update = function (event) {};
+			button.update = function (event)
+			{
+				switch (event.type)
+				{
+					case 'mousemove': button.active (event); break;
+				};
+			};
 
 			game.data.object.push (button);
 		},
@@ -49,6 +80,23 @@ var game =
 		set window (window)
 		{
 			Object.defineProperties ( window, { 'log': { set: function (log) { window.console.log (log); } }, 'ontick': { set: function (f) { window.clock = window.setInterval ( function () { f ({ tick: window.tick, time: window.time, type: 'tick' }); window.time += window.tick; }); }}, 'tick': { value: game.option.tick, writable: true }, 'time': { value: 0, writable: true }});
+
+			window.h = function (o) { return (o.hk) ? o.hk * o.w * game.data.canvas.width : o.h * game.data.canvas.height; };
+			window.r = function (o) { return o.r * Math.min (game.data.canvas.height, game.data.canvas.width); };
+			window.w = function (o) { return (o.wk) ? o.wk * o.h * game.data.canvas.height : o.w * game.data.canvas.width; };
+			window.x = function (o) { var xk = o.xk || 0; return o.x * game.data.canvas.width - xk * window.w (o); };
+			window.y = function (o) { var yk = o.yk || 0; return o.y * game.data.canvas.height - yk * window.h (o); };
+
+			window.detect = function (e, o, t)
+			{
+				t = t || 'box';
+				switch (t)
+				{
+					case 'box': return ((e.x >= window.x (o)) && (e.x <= window.x (o) + window.w (o)) && (e.y >= window.y (o)) && (e.y <= window.y (o) + window.h (o))); break;
+					case 'ring': var r = Math.sqrt (Math.pow (e.x - window.x (o), 2) + Math.pow (e.y - window.y (o))); return (r <= window.r (o)); break;
+				};
+			};
+
 			for (var name in game.option.body.css) window.document.body.style[name] = game.option.body.css[name];
 		}
 	},
@@ -59,7 +107,7 @@ var game =
 	{
 		if (game.data.canvas.draw)
 		{
-			var context = game.data.canvas.context;
+			var c = game.data.canvas.context;
 			for (var z = 0; z < game.option.canvas.z; z++)
 			{
 				for (var id = game.data.object.length; id--;)
@@ -78,40 +126,28 @@ var game =
 
 								if (z == call.z)
 								{
-									var H = game.data.canvas.height;
-									var W = game.data.canvas.width;
+									var H = game.data.canvas.height; var W = game.data.canvas.width;
+									var fill = call.fill; var stroke = call.stroke;
+									var h = window.h (call); var r = window.r (call); var w = window.w (call);
+									var sin = call.sin || 0; var cos = call.cos || 2 * Math.PI;
+									var x = window.x (call); var y = window.y (call);
 
-									var fill = call.fill;
-									var stroke = call.stroke;
-
-									var h = (call.hk) ? call.hk * call.w * W : call.h * H;
-									var r = call.r * Math.min (H, W);
-									var w = (call.wk) ? call.wk * call.h * H : call.w * W;
-
-									var sin = call.sin || 0;
-									var cos = call.cos || 2 * Math.PI;
-
-									var xk = call.xk || 0;
-									var yk = call.yk || 0;
-									var x = call.x * W - xk * w;
-									var y = call.y * H - yk * h;
-
-									if (fill) context.fillStyle = fill;
-									if (call.line) context.lineWidth = Math.floor (call.line * Math.min (H, W));
-									if (stroke) context.strokeStyle = stroke;
+									if (fill) c.fillStyle = fill;
+									if (call.line) c.lineWidth = Math.floor (call.line * Math.min (H, W));
+									if (stroke) c.strokeStyle = stroke;
 
 									if (!call.real) { h = Math.floor (h); w = Math.floor (w); x = Math.floor (x); y = Math.floor (y); };
 
 									switch (type)
 									{
 										case 'box':
-											if (fill) context.fillRect (x, y, w, h);
-											if (stroke) context.strokeRect (x, y, w, h);
+											if (fill) c.fillRect (x, y, w, h);
+											if (stroke) c.strokeRect (x, y, w, h);
 										break;
 
 										case 'ring':
-											if (fill) { context.arc (x, y, r, sin, cos); context.fill (); };
-											if (stroke) { context.arc (x, y, r, sin, cos); context.stroke (); };
+											if (fill) { c.arc (x, y, r, sin, cos); c.fill (); };
+											if (stroke) { c.arc (x, y, r, sin, cos); c.stroke (); };
 										break;
 									};
 								};
@@ -139,7 +175,7 @@ var game =
 	{
 		body: { css: { background: '#bbb', margin: 0 }},
 		canvas: { css: { position: 'absolute' }, z: 3 },
-		event: { list: [ 'click', 'resize', 'tick' ]},
+		event: { list: [ 'click', 'mousemove', 'resize', 'tick' ]},
 		tick: 100
 	},
 
