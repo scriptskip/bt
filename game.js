@@ -42,6 +42,18 @@ var game =
 			button.over = false;
 			button.type = button.type || 'box';
 
+			button.title = function ()
+			{
+				button.xk = button.xk || 0;
+				button.yk = button.yk || 0;
+				button.text.font = window.font (button.text, button, button.type);
+				button.text.x = window.x (button) / game.data.canvas.width;
+				button.text.y = window.y (button) / game.data.canvas.height;
+
+				button.text.x = (button.type == 'box') ? button.text.x + 0.5 * window.w (button) / game.data.canvas.width : button.text.x;
+				button.text.y = (button.type == 'box') ? button.text.y + 0.5 * window.h (button) / game.data.canvas.height : button.text.y;
+			};
+
 			button.active = function (event)
 			{
 				if (window.detect (event, button, button.type))
@@ -83,9 +95,11 @@ var game =
 				switch (event.type)
 				{
 					case 'mousemove': button.active (event); break;
+					case 'resize': button.title (); break;
 				};
 			};
 
+			button.title ();
 			game.data.object.push (button);
 		},
 
@@ -95,7 +109,23 @@ var game =
 		{
 			Object.defineProperties ( window, { 'log': { set: function (log) { window.console.log (log); } }, 'ontick': { set: function (f) { window.clock = window.setInterval ( function () { f ({ tick: window.tick, time: window.time, type: 'tick' }); window.time += window.tick; }); }}, 'tick': { value: game.option.tick, writable: true }, 'time': { value: 0, writable: true }});
 
-			window.font = function (o) { return o.font * game.data.canvas.height; };
+			window.font = function (o, s, t)
+			{
+				var font = o.font;
+				if (s)
+				{
+					var W = (t == 'ring') ? 1.5 * window.r (s) : 0.8 * window.w (s);
+					var w = game.data.canvas.context.measureText (o.text).width;
+					while (Math.abs (W - w) > 10)
+					{
+						font = (W > w) ? font * 2 : font * 0.8;
+						game.data.canvas.context.font = font * game.data.canvas.height + 'px ' + game.option.font.face;
+						w = game.data.canvas.context.measureText (o.text).width;
+					};
+				}
+				else { font = font * game.data.canvas.height; };
+				return font;
+			};
 			window.h = function (o)
 			{
 				var h = o.h || 2 * o.r || window.font (o);
@@ -201,7 +231,7 @@ var game =
 			game.create.window = window;
 			game.create.canvas = {};
 			game.create.event = game.option.event.list;
-			game.create.button = { color: '#ccc', fill: '#ccc', frame: '#bbb', hk: 1, line: 0.01, r: 0.1, text: { align: 'center', baseline: 'middle', fill: '#500', font: 0.1, text: 'button', x: 0.5, y: 0.5, z: 2 }, type: 'ring', w: 0.1, x: 0.5, xk: 0, y: 0.5, yk: 0, z: 1 };
+			game.create.button = { color: '#ccc', fill: '#ccc', frame: '#bbb', hk: 1, line: 0.01, r: 0.1, text: { align: 'center', baseline: 'middle', fill: '#888', font: 0.1, text: 'button', z: 2 }, type: 'ring', w: 0.1, x: 0.5, xk: 0.5, y: 0.5, yk: 0.5, z: 1 };
 		};
 	},
 
