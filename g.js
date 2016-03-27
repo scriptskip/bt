@@ -4,6 +4,8 @@ var g =
 	{
 		var c = g.w.d.createElement ('canvas');
 			c.c = c.getContext ('2d');
+			c.d = true;
+			c.z = 0;
 
 			c.a = function () { c.h (g.w.h); c.w (g.w.w); };
 			c.b = function (c) { g.c.style.background = c; };
@@ -26,7 +28,17 @@ var g =
 
 	d: function ()
 	{
-
+		if (g.c.d)
+		{
+			for (var z = 0; z <= g.c.z; z++)
+			{
+				for (var id = g.s.length; id--;)
+				{
+					g.w.l = z;
+				};
+			};
+			g.c.d = false;
+		};
 	},
 
 	e: function ()
@@ -49,9 +61,11 @@ var g =
 
 	set l (l)
 	{
-		l ();
-		window.onload = function () { g.w (); g.c (); g.e (); };
+		window.onload = function () { g.w (); g.c (); g.e (); l ();};
 	},
+
+	o: [],
+	s: [],
 
 	w: function ()
 	{
@@ -88,4 +102,7 @@ var g =
 	}
 };
 
-g.l = function () {};
+g.l = function ()
+{
+	g.c.z = 1;
+};
