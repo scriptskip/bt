@@ -76,6 +76,7 @@ var game =
 			{
 				if (window.detect ({ x: event.clientX, y: event.clientY }, button, button.type))
 				{
+					button.title ();
 					button.action ();
 				};
 			};
@@ -181,6 +182,7 @@ var game =
 		if (game.data.canvas.draw)
 		{
 			var c = game.data.canvas.context;
+				c.clearRect (0, 0, game.data.canvas.width, game.data.canvas.height);
 			for (var z = 0; z < game.option.canvas.z; z++)
 			{
 				for (var id = game.data.object.length; id--;)
@@ -194,7 +196,7 @@ var game =
 							var draw = frame[type];
 							for (var i = draw.length; i--;)
 							{
-								var call = draw[i] || {};
+								var call = draw[i];
 									call.z = call.z || 0;
 
 								if (z == call.z)
@@ -223,6 +225,7 @@ var game =
 										break;
 
 										case 'ring':
+											c.beginPath ();
 											if (fill) { c.arc (x, y, r, sin, cos); c.fill (); };
 											if (stroke) { c.arc (x, y, r, sin, cos); c.stroke (); };
 										break;
@@ -297,6 +300,32 @@ game.load =
 			text: { align: 'center', baseline: 'middle', fill: '#888', font: 0.1, text: 'button', z: 2 },
 			type: 'ring', w: 0.1, x: 0.5, xk: 0.5, y: 0.5, yk: 0.5, z: 1
 		};
+
+		game.create.button =
+		{
+			action: function ()
+			{
+				window.log = 'click';
+				this.x += 0.03;
+				game.data.canvas.redraw ();
+			},
+			color: '#ccc', fill: '#aaa', hk: 1, line: 0.01, r: 0.1,
+			text: { align: 'center', baseline: 'middle', fill: '#888', font: 0.1, text: 'button', z: 2 },
+			type: 'ring', w: 0.1, x: 0.6, xk: 0.5, y: 0.5, yk: 0.5, z: 1
+		};
+
+		game.create.button =
+		{
+			action: function ()
+			{
+				window.log = 'click';
+				this.x += 0.03;
+				game.data.canvas.redraw ();
+			},
+			color: '#ccc', fill: '#aaa', hk: 1, line: 0.01, r: 0.1,
+			text: { align: 'center', baseline: 'middle', fill: '#888', font: 0.15, text: 'button', z: 2 },
+			type: 'ring', w: 0.1, x: 0.6, xk: 0.5, y: 0.8, yk: 0.5, z: 1
+		};
 	}
 };
 
@@ -307,6 +336,8 @@ game.scene.start = function ()
 		action: function ()
 		{
 			window.log = 'click';
+			this.x += 0.03;
+			game.data.canvas.redraw ();
 		},
 		color: '#ccc', fill: '#aaa', hk: 1, line: 0.01, r: 0.1,
 		text: { align: 'center', baseline: 'middle', fill: '#888', font: 0.1, text: 'button', z: 2 },
