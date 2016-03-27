@@ -35,12 +35,57 @@ var game =
 
 			button.blossom = button.fill;
 			button.bloom = button.color || button.fill;
-
 			button.border = button.stroke;
 			button.frame = button.frame || button.stroke;
-
 			button.over = false;
 			button.type = button.type || 'box';
+
+			button.action = button.action || function () {};
+			button.in = button.in || function () {};
+			button.out = button.out || function () {};
+
+			button.active = function (event)
+			{
+				if (window.detect (event, button, button.type))
+				{
+					if (!button.over)
+					{
+						if (button.color) button.fill = button.bloom;
+						if (button.frame) button.stroke = button.frame;
+						game.data.canvas.style.cursor = 'pointer';
+						button.over = true;
+						button.in ();
+						game.data.canvas.redraw ();
+					};
+				}
+				else
+				{
+					if (button.over)
+					{
+						if (button.color) button.fill = button.blossom;
+						if (button.frame) button.stroke = button.border;
+						game.data.canvas.style.cursor = 'default';
+						button.over = false;
+						button.out ();
+						game.data.canvas.redraw ();
+					};
+				};
+			};
+
+			button.click = function (event)
+			{
+				if (window.detect ({ x: event.clientX, y: event.clientY }, button, button.type))
+				{
+					button.action ();
+				};
+			};
+
+			button.retype = function (type)
+			{
+				button.type = type;
+				button.draw.show = type;
+				button.title ();
+			};
 
 			button.title = function ()
 			{
@@ -54,35 +99,6 @@ var game =
 				button.text.y = (button.type == 'box') ? button.text.y + 0.5 * window.h (button) / game.data.canvas.height : button.text.y;
 			};
 
-			button.active = function (event)
-			{
-				if (window.detect (event, button, button.type))
-				{
-					if (!button.over)
-					{
-						if (button.color) button.fill = button.bloom;
-						if (button.frame) button.stroke = button.frame;
-						game.data.canvas.redraw ();
-						game.data.canvas.style.cursor = 'pointer';
-						button.over = true;
-					};
-				}
-				else
-				{
-					if (button.over)
-					{
-						if (button.color) button.fill = button.blossom;
-						if (button.frame) button.stroke = button.border;
-						game.data.canvas.redraw ();
-						game.data.canvas.style.cursor = 'default';
-						button.over = false;
-					};
-				};
-			};
-
-			button.in = function () {};
-			button.out = function () {};
-
 			button.draw =
 			{
 				box: { box: [ button ], text: [ button.text ]},
@@ -94,6 +110,7 @@ var game =
 			{
 				switch (event.type)
 				{
+					case 'click': button.click (event); break;
 					case 'mousemove': button.active (event); break;
 					case 'resize': button.title (); break;
 				};
@@ -145,6 +162,7 @@ var game =
 			window.detect = function (e, o, t)
 			{
 				t = t || 'box';
+				t = (e) ? t : undefined;
 				switch (t)
 				{
 					case 'box': return ((e.x >= window.x (o)) && (e.x <= window.x (o) + window.w (o)) && (e.y >= window.y (o)) && (e.y <= window.y (o) + window.h (o))); break;
@@ -231,7 +249,7 @@ var game =
 			game.create.window = window;
 			game.create.canvas = {};
 			game.create.event = game.option.event.list;
-			game.create.button = { color: '#ccc', fill: '#ccc', frame: '#bbb', hk: 1, line: 0.01, r: 0.1, text: { align: 'center', baseline: 'middle', fill: '#888', font: 0.1, text: 'button', z: 2 }, type: 'ring', w: 0.1, x: 0.5, xk: 0.5, y: 0.5, yk: 0.5, z: 1 };
+			game.create.button = { color: '#ccc', fill: '#aaa', hk: 1, line: 0.01, r: 0.1, text: { align: 'center', baseline: 'middle', fill: '#888', font: 0.1, text: 'button', z: 2 }, type: 'ring', w: 0.1, x: 0.5, xk: 0.5, y: 0.5, yk: 0.5, z: 1 };
 		};
 	},
 
