@@ -249,7 +249,8 @@ var game =
 			game.create.window = window;
 			game.create.canvas = {};
 			game.create.event = game.option.event.list;
-			game.create.button = { color: '#ccc', fill: '#aaa', hk: 1, line: 0.01, r: 0.1, text: { align: 'center', baseline: 'middle', fill: '#888', font: 0.1, text: 'button', z: 2 }, type: 'ring', w: 0.1, x: 0.5, xk: 0.5, y: 0.5, yk: 0.5, z: 1 };
+
+			if (load.scene) load.scene ();
 		};
 	},
 
@@ -258,11 +259,21 @@ var game =
 		body: { css: { background: '#bbb', margin: 0 }},
 		canvas: { css: { position: 'absolute' }, z: 3 },
 		event: { list: [ 'click', 'mousemove', 'resize', 'tick' ]},
-		font: { face: 'Arial', size: 0.1 },
+		font: { face: 'Arial' },
 		tick: 100
 	},
 
 	run: function (event) { game.update (event); game.draw (); },
+
+	scene:
+	{
+		set load (id)
+		{
+			game.data.object = [];
+			game.scene[id] ();
+			game.run ({type: 'resize'});
+		}
+	},
 
 	update: function (event)
 	{
@@ -271,4 +282,34 @@ var game =
 	}
 };
 
-game.load = {};
+game.load =
+{
+	scene: function ()
+	{
+		game.create.button =
+		{
+			action: function ()
+			{
+				window.log = 'click';
+				game.scene.load = 'start';
+			},
+			color: '#ccc', fill: '#aaa', hk: 1, line: 0.01, r: 0.1,
+			text: { align: 'center', baseline: 'middle', fill: '#888', font: 0.1, text: 'button', z: 2 },
+			type: 'ring', w: 0.1, x: 0.5, xk: 0.5, y: 0.5, yk: 0.5, z: 1
+		};
+	}
+};
+
+game.scene.start = function ()
+{
+	game.create.button =
+	{
+		action: function ()
+		{
+			window.log = 'click';
+		},
+		color: '#ccc', fill: '#aaa', hk: 1, line: 0.01, r: 0.1,
+		text: { align: 'center', baseline: 'middle', fill: '#888', font: 0.1, text: 'button', z: 2 },
+		type: 'ring', w: 0.1, x: 0.6, xk: 0.5, y: 0.5, yk: 0.5, z: 1
+	};
+};
