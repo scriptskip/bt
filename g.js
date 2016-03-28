@@ -48,6 +48,7 @@ var g = {
 		if (d) {
 			d.type = 'box';
 			d.type = (d.a != undefined) ? 'line' : d.type;
+			d.type = (d.i != undefined) ? 'image' : d.type;
 			d.type = (d.path != undefined) ? 'path' : d.type;
 			d.type = (d.r) ? 'ring' : d.type;
 			d.type = (d.t) ? 'text' : d.type;
@@ -81,6 +82,10 @@ var g = {
 							case 'box':
 								if (c.f) g.c.c.fillRect (x, y, w, h);
 								if (c.s) g.c.c.strokeRect (x, y, w, h);
+							break;
+
+							case 'image':
+								if (w) g.c.c.drawImage (c.i, x, y, w, h); else g.c.c.drawImage (c.i, x, y);
 							break;
 
 							case 'line':
@@ -157,8 +162,7 @@ var g = {
 
 			b.active = function () {
 				if (b.detect ()) {
-					if (!b.over)
-					{
+					if (!b.over) {
 						b.over = true;
 						if (b.c.ba) b.c.b = b.c.ba;
 						if (b.c.ta) b.c.t = b.c.ta;
@@ -167,8 +171,7 @@ var g = {
 					};
 				}
 				else {
-					if (b.over)
-					{
+					if (b.over) {
 						b.over = false;
 						if (b.c.ba) b.c.b = b.c.bd;
 						if (b.c.ta) b.c.t = b.c.td;
@@ -187,9 +190,8 @@ var g = {
 				g.c.wipe ({ id: b.id });
 				g.d ({ f: b.c.b, h: b.h, id: b.id, w: b.w, x: b.x - 0.5 * b.w, y: b.y - 0.5 * b.h, z: b.z });
 				g.d ({ f: b.c.t, h: b.h, id: b.id, t: b.t, ta: 'center', tb: 'middle', w: b.w * 0.6, x: b.x, y: b.y, z: b.z + 1 });
-				g.d ({ s: b.c.b, id: b.id, lw: 0.01, r: 0.2, x: b.x, y: b.y, z: b.z });
-				g.d ({ a: 0.1, b: 0.2, f: b.c.b, path: 'begin', s: b.c.b, id: b.id, lw: 0.01, x: 0.1, y: 0.1, z: b.z });
-				g.d ({ a: 0.2, b: 0.2, f: b.c.b, path: 'end', s: b.c.b, id: b.id, lw: 0.01, x: 0.1, y: 0.2, z: b.z });
+				//g.d ({ s: b.c.b, id: b.id, lw: 0.01, r: 0.2, x: b.x, y: b.y, z: b.z });
+				//g.d ({ i: g.i.test, id: b.id, x: 0.35, y: 0.15, z: b.z });
 				g.c.d = true;
 			};
 
@@ -209,10 +211,21 @@ var g = {
 		}
 	},
 
+	i: {
+		set l (l) {
+			for (var id in l) {
+				var i = new Image ();
+					i.src = l[id];
+				g.i[id] = i;
+			};
+		}
+	},
+
 	set l (l) {
 		window.onload = function () { g.w (); g.c (); g.e (); l ();};
 	},
 
+	lvl: {},
 	o: [],
 	s: [],
 
@@ -247,6 +260,8 @@ var g = {
 		g.w = w;
 	},
 
+	wipe: function () { g.o = []; g.s = []; g.c.d = true; },
+
 	u: function () {
 		g.w.u ();
 		g.c.u ();
@@ -254,6 +269,16 @@ var g = {
 	}
 };
 
+g.i.l = {
+	test: 'test.png'
+};
+
 g.l = function () {
-	g.g.b = { c: { ba: '#333', ta: '#ddd' }, h: 0.15, t: 'PLAY', w: 0.2, x: 0.5, y: 0.5 };
+	g.lvl.start ();
+	//g.g.b = { c: { ba: '#333', ta: '#ddd' }, h: 0.15, t: 'PLAY', w: 0.2, x: 0.5, y: 0.5, z: 1 };
+};
+
+g.lvl.start = function () {
+	g.wipe ();
+	g.g.b = { a: g.lvl.start, c: { ba: '#333', ta: '#ddd' }, h: 0.15, t: 'PLAY', w: 0.2, x: 0.5, y: 0.5, z: 1 };
 };
