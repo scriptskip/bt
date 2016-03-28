@@ -3,7 +3,7 @@ var g = {
 		var c = g.w.d.createElement ('canvas');
 			c.c = c.getContext ('2d');
 			c.d = true;
-			c.ff = 'Arial';
+			c.ff = 'monospace';
 			c.z = 0;
 
 			c.a = function () { c.h (g.w.h); c.w (g.w.w); g.c.d = true; };
@@ -47,6 +47,9 @@ var g = {
 	d: function (d) {
 		if (d) {
 			d.type = 'box';
+			d.type = (d.a != undefined) ? 'line' : d.type;
+			d.type = (d.path != undefined) ? 'path' : d.type;
+			d.type = (d.r) ? 'ring' : d.type;
 			d.type = (d.t) ? 'text' : d.type;
 			d.z = d.z || 0; g.c.z = (d.z > g.c.z) ? d.z : g.c.z;
 
@@ -60,18 +63,49 @@ var g = {
 				for (var id = 0; id < g.s.length; id++) {
 					var c = g.s[id];
 					if (c.z == z) {
+						var a = Math.floor (c.a * g.c.w ());
+						var b = Math.floor (c.b * g.c.h ());
+						var cos = c.cos || 2 * Math.PI;
 						var h = Math.floor (c.h * g.c.h ());
+						var r = Math.floor (c.r * Math.min (g.c.h (), g.c.w ()));
+						var sin = c.sin || 0;
 						var w = Math.floor (c.w * g.c.w ());
 						var x = Math.floor (c.x * g.c.w ());
 						var y = Math.floor (c.y * g.c.h ());
 
 						if (c.f) g.c.c.fillStyle = c.f;
+						if (c.lw) g.c.c.lineWidth = Math.floor (c.lw * Math.min (g.c.h (), g.c.w ()));
 						if (c.s) g.c.c.strokeStyle = c.s;
 
 						switch (c.type) {
 							case 'box':
 								if (c.f) g.c.c.fillRect (x, y, w, h);
 								if (c.s) g.c.c.strokeRect (x, y, w, h);
+							break;
+
+							case 'line':
+								g.c.c.beginPath (); g.c.c.moveTo (a, b); g.c.c.lineTo (x, y);
+								if (c.f) g.c.c.fill (); if (c.s) g.c.c.stroke ();
+							break;
+
+							case 'path':
+								if (c.path == 'begin') {
+									g.c.c.beginPath ();
+									g.c.c.moveTo (a, b); g.c.c.lineTo (x, y);
+								};
+								if (c.path == true) {
+									g.c.c.lineTo (a, b); g.c.c.lineTo (x, y);
+								};
+								if (c.path == 'end') {
+									g.c.c.lineTo (a, b); g.c.c.lineTo (x, y);
+									g.c.c.closePath ();
+								 	if (c.f) g.c.c.fill (); if (c.s) g.c.c.stroke ();
+								};
+							break;
+
+							case 'ring':
+								g.c.c.beginPath (); g.c.c.arc (x, y, r, sin, cos);
+								if (c.f) g.c.c.fill (); if (c.s) g.c.c.stroke ();
 							break;
 
 							case 'text':
@@ -153,6 +187,9 @@ var g = {
 				g.c.wipe ({ id: b.id });
 				g.d ({ f: b.c.b, h: b.h, id: b.id, w: b.w, x: b.x - 0.5 * b.w, y: b.y - 0.5 * b.h, z: b.z });
 				g.d ({ f: b.c.t, h: b.h, id: b.id, t: b.t, ta: 'center', tb: 'middle', w: b.w * 0.6, x: b.x, y: b.y, z: b.z + 1 });
+				g.d ({ s: b.c.b, id: b.id, lw: 0.01, r: 0.2, x: b.x, y: b.y, z: b.z });
+				g.d ({ a: 0.1, b: 0.2, f: b.c.b, path: 'begin', s: b.c.b, id: b.id, lw: 0.01, x: 0.1, y: 0.1, z: b.z });
+				g.d ({ a: 0.2, b: 0.2, f: b.c.b, path: 'end', s: b.c.b, id: b.id, lw: 0.01, x: 0.1, y: 0.2, z: b.z });
 				g.c.d = true;
 			};
 
@@ -218,5 +255,5 @@ var g = {
 };
 
 g.l = function () {
-	g.g.b = { c: { ba: '#333', ta: '#ddd' }, h: 0.15, t: 'button', w: 0.2, x: 0.5, y: 0.5 };
+	g.g.b = { c: { ba: '#333', ta: '#ddd' }, h: 0.15, t: 'PLAY', w: 0.2, x: 0.5, y: 0.5 };
 };
