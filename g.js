@@ -10,6 +10,8 @@ var g = {
 			c.b = function (c) { g.c.style.background = c; };
 			c.fs = function (o) {
 				var fs = o.h || c.h () * 0.5;
+				g.c.c.font = fs + 'px ' + c.ff;
+
 				var w = g.c.c.measureText (o.t).width;
 				var W = o.w * c.w ();
 				while (Math.abs (w - W) > 5) {
@@ -22,11 +24,13 @@ var g = {
 			c.h = function (h) { if (h) c.height = h; else return c.height; };
 			c.w = function (w) { if (w) c.width = w; else return c.width; };
 			c.wipe = function (o, d) {
+				var s = [];
 				for (var i = g.s.length; i--;) {
 					for (var k in o) {
-						if (o[k] == g.s[i][k]) g.s.splice (i, 1);
+						if (o[k] != g.s[i][k]) s.push (g.s[i]);
 					};
 				};
+				g.s = s;
 				if (d) g.c.d = true;
 			};
 
@@ -108,15 +112,34 @@ var g = {
 
 			b.a = b.a || function () { g.w.l = b.id; b.wipe (); };
 			b.c = b.c || {};
-			b.c.b = '#000';
+			b.c.b = b.c.b || '#000';
+			b.c.ba = b.c.ba || b.c.b;
+			b.c.bd = b.c.b;
 			b.c.t = '#fff';
 			b.in = b.in || function () {};
 			b.out = b.out || function () {};
+			b.over = false;
 			b.z = b.z || 0;
 
 			b.action = function () { if (b.detect ()) b.a (); };
 
-			b.active = function () { if (b.detect ()) { g.c.style.cursor = 'pointer'; b.in (); } else { g.c.style.cursor = 'default'; b.out (); }};
+			b.active = function () {
+				if (b.detect ()) {
+					if (!b.over)
+					{
+						b.over = true;
+						if (b.c.ba) { b.c.b = b.c.ba; b.s (); };
+						g.c.style.cursor = 'pointer'; b.in ();
+					};
+				}
+				else {
+					if (b.over)
+					{
+						b.over = false;
+						if (b.c.ba) { b.c.b = b.c.bd; b.s (); };
+						g.c.style.cursor = 'default'; b.out ();
+					};
+				}};
 
 			b.detect = function () {
 				var x = g.e.x || g.e.clientX; var y = g.e.y || g.e.clientY;
@@ -125,6 +148,7 @@ var g = {
 			};
 
 			b.s = function () {
+				g.c.wipe ({ id: b.id });
 				g.d ({ f: b.c.b, h: b.h, id: b.id, w: b.w, x: b.x - 0.5 * b.w, y: b.y - 0.5 * b.h, z: b.z });
 				g.d ({ f: b.c.t, h: b.h, id: b.id, t: b.t, ta: 'center', tb: 'middle', w: b.w * 0.6, x: b.x, y: b.y, z: b.z + 1 });
 				g.c.d = true;
@@ -192,5 +216,5 @@ var g = {
 };
 
 g.l = function () {
-	g.g.b = { h: 0.1, t: 'button', w: 0.1, x: 0.5, y: 0.5 };
+	g.g.b = { c: { ba: '#333' }, h: 0.15, t: 'button', w: 0.2, x: 0.5, y: 0.5 };
 };
