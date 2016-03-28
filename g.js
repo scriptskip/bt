@@ -12,7 +12,7 @@ var g = {
 				var fs = o.h || c.h () * 0.5;
 				var w = g.c.c.measureText (o.t).width;
 				var W = o.w * c.w ();
-				while (Math.abs (w - W) > 1) {
+				while (Math.abs (w - W) > 5) {
 					fs = (w < W) ? fs * 1.6 : fs * 0.8;
 					g.c.c.font = fs + 'px ' + c.ff;
 					w = g.c.c.measureText (o.t).width;
@@ -47,10 +47,10 @@ var g = {
 				for (var id = 0; id < g.s.length; id++) {
 					var c = g.s[id];
 					if (c.z == z) {
-						var h = c.h * g.c.h ();
-						var w = c.w * g.c.w ();
-						var x = c.x * g.c.w ();
-						var y = c.y * g.c.h ();
+						var h = Math.floor (c.h * g.c.h ());
+						var w = Math.floor (c.w * g.c.w ());
+						var x = Math.floor (c.x * g.c.w ());
+						var y = Math.floor (c.y * g.c.h ());
 
 						if (c.f) g.c.c.fillStyle = c.f;
 						if (c.s) g.c.c.strokeStyle = c.s;
@@ -97,16 +97,33 @@ var g = {
 		set b (b) {
 			b.id = 'button' + g.o.length;
 
+			b.a = b.a || function () { g.w.l = b.id; };
+			b.c = b.c || {};
+			b.c.b = '#000';
+			b.c.t = '#fff';
+			b.in = b.in || function () {};
+			b.out = b.out || function () {};
 			b.z = b.z || 0;
 
+			b.action = function () { if (b.detect ()) b.a (); };
+
+			b.active = function () { if (b.detect ()) { g.c.style.cursor = 'pointer'; b.in (); } else { g.c.style.cursor = 'default'; b.out (); }};
+
+			b.detect = function () {
+				var x = g.e.x || g.e.clientX; var y = g.e.y || g.e.clientY;
+					x = x / g.c.w () + 0.5 * b.w; y = y / g.c.h () + 0.5 * b.h;
+				return ((x >= b.x) && (x <= b.x + b.w) && (y >= b.y) && (y <= b.y + b.h));
+			};
+
 			b.s = function () {
-				g.d ({ f: '#00f', h: b.h, id: b.id, w: b.w, x: b.x - 0.5 * b.w, y: b.y - 0.5 * b.h, z: b.z });
-				g.d ({ f: '#000', h: b.h, id: b.id, t: 'button', ta: 'center', tb: 'middle', w: b.w, x: b.x, y: b.y, z: b.z + 1 });
+				g.d ({ f: b.c.b, h: b.h, id: b.id, w: b.w, x: b.x - 0.5 * b.w, y: b.y - 0.5 * b.h, z: b.z });
+				g.d ({ f: b.c.t, h: b.h, id: b.id, t: b.t, ta: 'center', tb: 'middle', w: b.w * 0.6, x: b.x, y: b.y, z: b.z + 1 });
 				g.c.d = true;
 			};
 
 			b.u = function () { switch (g.e.type) {
-				case 'click': g.w.l = g.e.type; break;
+				case 'click': b.action (); break;
+				case 'mousemove': b.active (); break;
 			};};
 
 			b.s ();
@@ -150,7 +167,6 @@ var g = {
 	}
 };
 
-g.l = function ()
-{
-	g.g.b = { h: 0.1, t: 'text', w: 0.1, x: 0.5, y: 0.5 };
+g.l = function () {
+	g.g.b = { h: 0.1, t: 'button', w: 0.1, x: 0.5, y: 0.5 };
 };
