@@ -21,6 +21,14 @@ var g = {
 			};
 			c.h = function (h) { if (h) c.height = h; else return c.height; };
 			c.w = function (w) { if (w) c.width = w; else return c.width; };
+			c.wipe = function (o, d) {
+				for (var i = g.s.length; i--;) {
+					for (var k in o) {
+						if (o[k] == g.s[i][k]) g.s.splice (i, 1);
+					};
+				};
+				if (d) g.c.d = true;
+			};
 
 		c.u = function () { switch (g.e.type) {
 			case 'resize': c.a (); break;
@@ -43,6 +51,7 @@ var g = {
 		};
 
 		if (g.c.d) {
+			g.c.c.clearRect (0, 0, g.c.w (), g.c.h ());
 			for (var z = 0; z <= g.c.z; z++) {
 				for (var id = 0; id < g.s.length; id++) {
 					var c = g.s[id];
@@ -97,7 +106,7 @@ var g = {
 		set b (b) {
 			b.id = 'button' + g.o.length;
 
-			b.a = b.a || function () { g.w.l = b.id; };
+			b.a = b.a || function () { g.w.l = b.id; b.wipe (); };
 			b.c = b.c || {};
 			b.c.b = '#000';
 			b.c.t = '#fff';
@@ -119,6 +128,12 @@ var g = {
 				g.d ({ f: b.c.b, h: b.h, id: b.id, w: b.w, x: b.x - 0.5 * b.w, y: b.y - 0.5 * b.h, z: b.z });
 				g.d ({ f: b.c.t, h: b.h, id: b.id, t: b.t, ta: 'center', tb: 'middle', w: b.w * 0.6, x: b.x, y: b.y, z: b.z + 1 });
 				g.c.d = true;
+			};
+
+			b.wipe = function () {
+				g.c.style.cursor = 'default';
+				g.w.wipe ({ id: b.id });
+				g.c.wipe ({ id: b.id }, true);
 			};
 
 			b.u = function () { switch (g.e.type) {
@@ -155,6 +170,15 @@ var g = {
 		w.u = function () { switch (g.e.type) {
 			case 'resize': w.h = w.innerHeight; w.w = w.innerWidth; break;
 		};};
+
+		w.wipe = function (o, d) {
+			for (var i = g.o.length; i--;) {
+				for (var k in o) {
+					if (o[k] == g.o[i][k]) g.o.splice (i, 1);
+				};
+			};
+			if (d) g.c.d = true;
+		};
 
 		delete g.w;
 		g.w = w;
