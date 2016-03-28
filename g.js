@@ -112,10 +112,8 @@ var g = {
 
 			b.a = b.a || function () { g.w.l = b.id; b.wipe (); };
 			b.c = b.c || {};
-			b.c.b = b.c.b || '#000';
-			b.c.ba = b.c.ba || b.c.b;
-			b.c.bd = b.c.b;
-			b.c.t = '#fff';
+			b.c.b = b.c.b || '#000'; b.c.ba = b.c.ba || b.c.b; b.c.bd = b.c.b;
+			b.c.t = b.c.t || '#fff'; b.c.ta = b.c.ta || b.c.t; b.c.td = b.c.t;
 			b.in = b.in || function () {};
 			b.out = b.out || function () {};
 			b.over = false;
@@ -128,7 +126,9 @@ var g = {
 					if (!b.over)
 					{
 						b.over = true;
-						if (b.c.ba) { b.c.b = b.c.ba; b.s (); };
+						if (b.c.ba) b.c.b = b.c.ba;
+						if (b.c.ta) b.c.t = b.c.ta;
+						if (b.c.ba || b.c.ta) b.s ();
 						g.c.style.cursor = 'pointer'; b.in ();
 					};
 				}
@@ -136,7 +136,9 @@ var g = {
 					if (b.over)
 					{
 						b.over = false;
-						if (b.c.ba) { b.c.b = b.c.bd; b.s (); };
+						if (b.c.ba) b.c.b = b.c.bd;
+						if (b.c.ta) b.c.t = b.c.td;
+						if (b.c.ba || b.c.ta) b.s ();
 						g.c.style.cursor = 'default'; b.out ();
 					};
 				}};
@@ -216,5 +218,5 @@ var g = {
 };
 
 g.l = function () {
-	g.g.b = { c: { ba: '#333' }, h: 0.15, t: 'button', w: 0.2, x: 0.5, y: 0.5 };
+	g.g.b = { c: { ba: '#333', ta: '#ddd' }, h: 0.15, t: 'button', w: 0.2, x: 0.5, y: 0.5 };
 };
