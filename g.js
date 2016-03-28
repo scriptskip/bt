@@ -3,10 +3,22 @@ var g = {
 		var c = g.w.d.createElement ('canvas');
 			c.c = c.getContext ('2d');
 			c.d = true;
+			c.ff = 'Arial';
 			c.z = 0;
 
 			c.a = function () { c.h (g.w.h); c.w (g.w.w); g.c.d = true; };
 			c.b = function (c) { g.c.style.background = c; };
+			c.fs = function (o) {
+				var fs = o.h || c.h () * 0.5;
+				var w = g.c.c.measureText (o.t).width;
+				var W = o.w * c.w ();
+				while (Math.abs (w - W) > 1) {
+					fs = (w < W) ? fs * 1.6 : fs * 0.8;
+					g.c.c.font = fs + 'px ' + c.ff;
+					w = g.c.c.measureText (o.t).width;
+				};
+				return fs;
+			};
 			c.h = function (h) { if (h) c.height = h; else return c.height; };
 			c.w = function (w) { if (w) c.width = w; else return c.width; };
 
@@ -23,6 +35,7 @@ var g = {
 	d: function (d) {
 		if (d) {
 			d.type = 'box';
+			d.type = (d.t) ? 'text' : d.type;
 			d.z = d.z || 0; g.c.z = (d.z > g.c.z) ? d.z : g.c.z;
 
 			g.c.d = d.d || false;
@@ -34,17 +47,26 @@ var g = {
 				for (var id = 0; id < g.s.length; id++) {
 					var c = g.s[id];
 					if (c.z == z) {
-						g.w.l = id;
 						var h = c.h * g.c.h ();
 						var w = c.w * g.c.w ();
 						var x = c.x * g.c.w ();
 						var y = c.y * g.c.h ();
 
 						if (c.f) g.c.c.fillStyle = c.f;
+						if (c.s) g.c.c.strokeStyle = c.s;
 
 						switch (c.type) {
 							case 'box':
 								if (c.f) g.c.c.fillRect (x, y, w, h);
+								if (c.s) g.c.c.strokeRect (x, y, w, h);
+							break;
+
+							case 'text':
+								if (h || w) { var fs = (w) ? g.c.fs (c) : h; g.c.c.font = fs + 'px ' + g.c.ff; };
+								if (c.ta) g.c.c.textAlign = c.ta;
+								if (c.tb) g.c.c.textBaseline = c.tb;
+								if (c.f) g.c.c.fillText (c.t, x, y);
+								if (c.s) g.c.c.strokeText (c.t, x, y);
 							break;
 						};
 					};
@@ -75,10 +97,11 @@ var g = {
 		set b (b) {
 			b.id = 'button' + g.o.length;
 
-			b.s = function ()
-			{
-				g.d ({ f: '#00f', h: 0.1, id: b.id, w: 0.1, x: 0.5, y: 0.5 });
-				g.d ({ f: '#00f', h: 0.1, id: b.id, w: 0.1, x: 0.2, y: 0.5 });
+			b.z = b.z || 0;
+
+			b.s = function () {
+				g.d ({ f: '#00f', h: b.h, id: b.id, w: b.w, x: b.x - 0.5 * b.w, y: b.y - 0.5 * b.h, z: b.z });
+				g.d ({ f: '#000', h: b.h, id: b.id, t: 'button', ta: 'center', tb: 'middle', w: b.w, x: b.x, y: b.y, z: b.z + 1 });
 				g.c.d = true;
 			};
 
@@ -129,6 +152,5 @@ var g = {
 
 g.l = function ()
 {
-	//g.c.z = 1;
-	g.g.b = {};
+	g.g.b = { h: 0.1, t: 'text', w: 0.1, x: 0.5, y: 0.5 };
 };
