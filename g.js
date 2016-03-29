@@ -188,6 +188,8 @@ var g = {
 
 			b.s = function () {
 				g.c.wipe ({ id: b.id });
+				b.h = (b.hk) ? (b.hk * b.w * g.c.w ()) / g.c.h () : b.h;
+				b.w = (b.wk) ? (b.wk * b.h * g.c.h ()) / g.c.w () : b.w;
 				g.d ({ f: b.c.b, h: b.h, id: b.id, w: b.w, x: b.x - 0.5 * b.w, y: b.y - 0.5 * b.h, z: b.z });
 				g.d ({ f: b.c.t, h: b.h, id: b.id, t: b.t, ta: 'center', tb: 'middle', w: b.w * 0.6, x: b.x, y: b.y, z: b.z + 1 });
 				g.c.d = true;
@@ -202,6 +204,7 @@ var g = {
 			b.u = function () { switch (g.e.type) {
 				case 'mousedown': b.action (); break;
 				case 'mousemove': b.active ();  break;
+				case 'resize': b.s (); break;
 			};};
 
 			b.s ();
@@ -219,9 +222,7 @@ var g = {
 		}
 	},
 
-	set l (l) {
-		window.onload = function () { g.w (); g.c (); g.e (); l ();};
-	},
+	set l (l) { window.onload = function () { g.w (); g.c (); g.e (); l ();}; },
 
 	lvl: {},
 	o: [],
@@ -277,7 +278,7 @@ g.l = function () {
 
 g.lvl.start = function () {
 	g.wipe ();
-	g.g.b = { a: g.lvl.begin, c: { ba: '#333', ta: '#ddd' }, h: 0.15, t: 'PLAY', w: 0.2, x: 0.5, y: 0.5, z: 1 };
+	g.g.b = { a: g.lvl.begin, c: { ba: '#333', ta: '#ddd' }, hk: 0.5, t: 'PLAY', w: 0.2, x: 0.5, y: 0.5, z: 1 };
 };
 
 g.lvl.begin = function ()
