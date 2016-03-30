@@ -412,15 +412,15 @@ g.l = function () {
 g.lvl.begin = function () {
 	g.wipe ();
 	g.c.b ('#000');
+	g.g.r = { a: g.lvl.option, c: { b: 'transparent', ba: 'transparent' }, i: g.i.option, r: 0.05, wk: 1, x: 0.95, y: 0.1, z: 1 };
 };
 
 g.lvl.option = function () {
-	g.wipe ();
 };
 
 g.lvl.start = function () {
 	g.wipe ();
-	g.g.b = { a: g.lvl.begin, c: { ba: '#333', ta: '#ddd' }, hk: 0.5, t: 'PLAY', w: 0.2, x: 0.5, y: 0.5, z: 1 };
+	g.g.b = { a: g.lvl.begin, c: { b: '#aaa', ba: '#ddd', t: '#eee', ta: '#fff' }, hk: 0.5, t: 'PLAY', w: 0.2, x: 0.5, y: 0.5, z: 1 };
 	g.g.r = { a: g.lvl.option, c: { b: 'transparent', ba: 'transparent' }, i: g.i.option, r: 0.05, wk: 1, x: 0.95, y: 0.1, z: 1 };
 };
 
