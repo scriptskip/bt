@@ -211,7 +211,7 @@ var g = {
 			g.o.push (b);
 		},
 
-				set b (b) {
+		set b (b) {
 			b.id = 'button' + g.o.length;
 
 			b.a = b.a || function () { g.w.l = b.id; b.wipe (); };
@@ -319,9 +319,12 @@ var g = {
 
 			b.s = function () {
 				g.c.wipe ({ id: b.id });
-				b.h = b.r; b.w = b.r;
-				g.d ({ f: b.c.b, h: b.r, id: b.id, r: b.r, w: b.w, x: b.x, y: b.y, z: b.z });
-				g.d ({ f: b.c.t, h: b.h, id: b.id, t: b.t, ta: 'center', tb: 'middle', w: b.w * 0.6, x: b.x, y: b.y, z: b.z + 1 });
+				b.h = 2 * b.r; b.w = b.r;
+				b.h = (b.hk) ? (b.hk * b.w * g.c.w ()) / g.c.h () : b.h;
+				b.w = (b.wk) ? (b.wk * b.h * g.c.h ()) / g.c.w () : b.w;
+				g.d ({ f: b.c.b, h: b.r, id: b.id, r: b.r, w: b.r, x: b.x, y: b.y, z: b.z });
+				if (b.i) g.d ({ h: b.h, i: b.i, id: b.id, w: b.w, x: b.x - 0.5 * b.w, y: b.y - 0.5 * b.h, z: b.z + 1 });
+				if (b.t) g.d ({ f: b.c.t, h: b.h, id: b.id, t: b.t, ta: 'center', tb: 'middle', w: b.w * 0.6, x: b.x, y: b.y, z: b.z + 1 });
 				g.c.d = true;
 			};
 
@@ -394,26 +397,30 @@ var g = {
 	u: function () {
 		g.w.u ();
 		g.c.u ();
-		for (var i = g.o.length; i--;) if (g.o[i].u) g.o[i].u ();
+		for (var i = g.o.length; i--;) if (g.o[i]) g.o[i].u ();
 	}
 };
 
 g.i.l = {
-	test: 'test.png'
+	option: 'option.svg'
 };
 
 g.l = function () {
 	g.lvl.start ();
 };
 
-g.lvl.start = function () {
-	g.wipe ();
-	//g.g.b = { a: g.lvl.begin, c: { ba: '#333', ta: '#ddd' }, hk: 0.5, t: 'PLAY', w: 0.2, x: 0.5, y: 0.5, z: 1 };
-	g.g.r = { a: g.lvl.begin, c: { ba: '#333', ta: '#ddd' }, r: 0.2, t: 'TIME', x: 0.5, y: 0.5, z: 1 };
-};
-
-g.lvl.begin = function ()
-{
+g.lvl.begin = function () {
 	g.wipe ();
 	g.c.b ('#000');
 };
+
+g.lvl.option = function () {
+	g.wipe ();
+};
+
+g.lvl.start = function () {
+	g.wipe ();
+	g.g.b = { a: g.lvl.begin, c: { ba: '#333', ta: '#ddd' }, hk: 0.5, t: 'PLAY', w: 0.2, x: 0.5, y: 0.5, z: 1 };
+	g.g.r = { a: g.lvl.option, c: { b: 'transparent', ba: 'transparent' }, i: g.i.option, r: 0.05, wk: 1, x: 0.95, y: 0.1, z: 1 };
+};
+
