@@ -428,11 +428,12 @@ g.lvl.begin = function () {
 };
 
 g.lvl.option = function () {
-	//g.wipe ();
 	if (g.p.option) {
 		g.p.option = false;
 		g.wipe ({ id: 'option' });
 	} else {
+		g.c.b ('#fff');
+		g.wipe ();
 		g.p.option = true;
 		g.g.r = { a: function () { g.p.option = false; g.lvl.start (); }, c: { b: 'transparent' }, i: g.i.girl, id: 'option', r: 0.2, wk: 0.5, x: 0.5, y: 0.5, z: 1 };
 	};
@@ -440,6 +441,7 @@ g.lvl.option = function () {
 
 g.lvl.start = function () {
 	g.wipe ();
+	g.c.b ('#fff');
 	g.g.b = { a: g.lvl.begin, c: { b: '#aaa', ba: '#ddd', t: '#eee', ta: '#fff' }, hk: 0.5, t: 'PLAY', w: 0.2, x: 0.5, y: 0.5, z: 1 };
 	g.g.r = { a: g.lvl.option, c: { b: 'transparent', ba: 'transparent' }, i: g.i.option, r: 0.05, wk: 1, x: 0.95, y: 0.1, z: 1 };
 };
