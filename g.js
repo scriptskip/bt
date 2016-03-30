@@ -434,7 +434,7 @@ g.lvl.option = function () {
 		g.wipe ({ id: 'option' });
 	} else {
 		g.p.option = true;
-		g.g.r = { a: g.lvl.start, c: { b: 'transparent' }, i: g.i.girl, id: 'option', r: 0.2, wk: 0.5, x: 0.5, y: 0.5, z: 1 };
+		g.g.r = { a: function () { g.p.option = false; g.lvl.start (); }, c: { b: 'transparent' }, i: g.i.girl, id: 'option', r: 0.2, wk: 0.5, x: 0.5, y: 0.5, z: 1 };
 	};
 };
 
