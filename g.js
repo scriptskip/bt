@@ -437,8 +437,8 @@ g.lvl.option = function () {
 		g.c.b ('#fff');
 		g.wipe ();
 		g.p.option = true;
-		g.g.b = { a: function () { g.p.option = false; g.lvl[g.p.lvl] (); }, c: { b: '#aaa', ba: '#ddd', t: '#eee', ta: '#fff' }, h: 0.1, t: 'НАЗАД', wk: 3, x: 0.5, y: 0.3, z: 1 };
-		g.g.b = { a: g.lvl.start, c: { b: '#aaa', ba: '#ddd', t: '#eee', ta: '#fff' }, h: 0.1, t: 'АУДИО', wk: 3, x: 0.5, y: 0.425, z: 1 };
+		g.g.b = { a: function () { g.p.option = false; g.lvl[g.p.lvl] (); g.e = {}; }, c: { b: '#aaa', ba: '#ddd', t: '#eee', ta: '#fff' }, h: 0.1, t: 'НАЗАД', wk: 3, x: 0.5, y: 0.3, z: 1 };
+		g.g.b = { a: function () { g.p.option = false; g.lvl.start (); g.e = {}; }, c: { b: '#aaa', ba: '#ddd', t: '#eee', ta: '#fff' }, h: 0.1, t: 'ВЫЙТИ', wk: 3, x: 0.5, y: 0.425, z: 1 };
 	};
 };
 
