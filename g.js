@@ -212,7 +212,7 @@ var g = {
 		},
 
 		set b (b) {
-			b.id = 'button' + g.o.length;
+			b.id = b.id || 'button' + g.o.length;
 
 			b.a = b.a || function () { g.w.l = b.id; b.wipe (); };
 			b.c = b.c || {};
@@ -277,7 +277,7 @@ var g = {
 		},
 
 		set r (b) {
-			b.id = 'round' + g.o.length;
+			b.id = b.id || 'round' + g.o.length;
 
 			b.a = b.a || function () { g.w.l = b.id; b.wipe (); };
 			b.c = b.c || {};
@@ -359,6 +359,11 @@ var g = {
 
 	lvl: {},
 	o: [],
+
+	p: {
+		option: false
+	},
+
 	s: [],
 
 	w: function () {
@@ -392,7 +397,13 @@ var g = {
 		g.w = w;
 	},
 
-	wipe: function () { g.o = []; g.s = []; g.c.d = true; g.c.style.cursor = 'default'; },
+	wipe: function (o) {
+		if (o) {
+			g.c.wipe (o); g.w.wipe (o); g.c.d = true; g.c.style.cursor = 'default';
+		} else {
+			g.o = []; g.s = []; g.c.d = true; g.c.style.cursor = 'default';
+		};
+	},
 
 	u: function () {
 		g.w.u ();
@@ -402,6 +413,7 @@ var g = {
 };
 
 g.i.l = {
+	girl: 'girl.svg',
 	option: 'option.svg'
 };
 
@@ -412,10 +424,18 @@ g.l = function () {
 g.lvl.begin = function () {
 	g.wipe ();
 	g.c.b ('#000');
-	g.g.r = { a: g.lvl.option, c: { b: 'transparent', ba: 'transparent' }, i: g.i.option, r: 0.05, wk: 1, x: 0.95, y: 0.1, z: 1 };
+	g.g.r = { a: g.lvl.option, i: g.i.option, r: 0.05, wk: 1, x: 0.95, y: 0.1, z: 1 };
 };
 
 g.lvl.option = function () {
+	//g.wipe ();
+	if (g.p.option) {
+		g.p.option = false;
+		g.wipe ({ id: 'option' });
+	} else {
+		g.p.option = true;
+		g.g.r = { a: g.lvl.start, c: { b: 'transparent' }, i: g.i.girl, id: 'option', r: 0.2, wk: 0.5, x: 0.5, y: 0.5, z: 1 };
+	};
 };
 
 g.lvl.start = function () {
