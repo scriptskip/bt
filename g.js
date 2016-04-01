@@ -301,7 +301,7 @@ var g = {
 			};
 
 			p.u = function () { switch (g.e.type) {
-				case 'mousedown': g.g.t = { x: p.x, y: p.y }; break;
+				case 'mousedown': g.w.wipe ( { id: 'tb' }); g.g.t = { id: 'tb', x: p.x, y: p.y }; break;
 				case 'mousemove': p.vxy (); break;
 				case 'resize': p.s (); break;
 				case 'tick': p.m.upd (); break;
@@ -380,7 +380,7 @@ var g = {
 		},
 
 		set t (t) {
-			t.id = 'timebubble' + g.o.length;
+			t.id = t.id || 'timebubble' + g.o.length;
 
 			t.r = 0.01;
 			t.spd = 0.01;
