@@ -301,6 +301,7 @@ var g = {
 			};
 
 			p.u = function () { switch (g.e.type) {
+				case 'mousedown': g.g.t = { x: p.x, y: p.y }; break;
 				case 'mousemove': p.vxy (); break;
 				case 'resize': p.s (); break;
 				case 'tick': p.m.upd (); break;
@@ -376,6 +377,32 @@ var g = {
 
 			b.s ();
 			g.o.push (b);
+		},
+
+		set t (t) {
+			t.id = 'timebubble' + g.o.length;
+
+			t.r = 0.01;
+			t.spd = 0.01;
+			t.x = t.x || 0.5; t.y = t.y || 0.5;
+
+			t.big = function () { if (t.r < 0.05) {
+				t.r += (t.r < 0.05) ? t.spd : 0;
+				t.s ();
+			};};
+
+			t.s = function () {
+				g.c.wipe ({ id: t.id });
+				g.d ({ f: 'rgba(255,255,255,0.2)', id: t.id, r: t.r, s: '#fff', x: t.x, y: t.y, z: 2 });
+				g.c.d = true;
+			};
+
+			t.u = function () { switch (g.e.type) {
+				case 'tick': t.big (); break;
+			};};
+
+			t.s ();
+			g.o.push (t);
 		}
 	},
 
@@ -460,7 +487,7 @@ g.l = function () {
 g.lvl.begin = function () {
 	g.wipe ();
 	g.p.lvl = 'begin';
-	g.g.bg = { i: g.i.bg };
+	g.w.d.b.style.backgroundImage = 'url(bg.svg)';
 	g.c.b ('transparent'); g.c.style.cursor = 'none';
 	g.g.r = { a: g.lvl.option, c: { b: 'transparent', ba: 'transparent' }, i: g.i.option, r: 0.025, wk: 1, x: 0.96, y: 0.05, z: 1 };
 	g.g.p = { wk: 0.4 };
