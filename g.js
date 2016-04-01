@@ -147,71 +147,6 @@ var g = {
 
 	g: {
 		set b (b) {
-			b.id = 'button' + g.o.length;
-
-			b.a = b.a || function () { g.w.l = b.id; b.wipe (); };
-			b.c = b.c || {};
-			b.c.b = b.c.b || '#000'; b.c.ba = b.c.ba || b.c.b; b.c.bd = b.c.b;
-			b.c.t = b.c.t || '#fff'; b.c.ta = b.c.ta || b.c.t; b.c.td = b.c.t;
-			b.in = b.in || function () {};
-			b.out = b.out || function () {};
-			b.over = false;
-			b.z = b.z || 0;
-
-			b.action = function () { if (b.detect ()) { b.a (); }; };
-
-			b.active = function () {
-				if (b.detect ()) {
-					if (!b.over) {
-						b.over = true;
-						if (b.c.ba) b.c.b = b.c.ba;
-						if (b.c.ta) b.c.t = b.c.ta;
-						if (b.c.ba || b.c.ta) b.s ();
-						g.c.style.cursor = 'pointer'; b.in ();
-					};
-				}
-				else {
-					if (b.over) {
-						b.over = false;
-						if (b.c.ba) b.c.b = b.c.bd;
-						if (b.c.ta) b.c.t = b.c.td;
-						if (b.c.ba || b.c.ta) b.s ();
-						g.c.style.cursor = 'default'; b.out ();
-					};
-				}};
-
-			b.detect = function () {
-				var x = g.e.x || g.e.clientX; var y = g.e.y || g.e.clientY;
-					x = x / g.c.w () + 0.5 * b.w; y = y / g.c.h () + 0.5 * b.h;
-				return ((x >= b.x) && (x <= b.x + b.w) && (y >= b.y) && (y <= b.y + b.h));
-			};
-
-			b.s = function () {
-				g.c.wipe ({ id: b.id });
-				b.h = (b.hk) ? (b.hk * b.w * g.c.w ()) / g.c.h () : b.h;
-				b.w = (b.wk) ? (b.wk * b.h * g.c.h ()) / g.c.w () : b.w;
-				g.d ({ f: b.c.b, h: b.h, id: b.id, w: b.w, x: b.x - 0.5 * b.w, y: b.y - 0.5 * b.h, z: b.z });
-				g.d ({ f: b.c.t, h: b.h, id: b.id, t: b.t, ta: 'center', tb: 'middle', w: b.w * 0.6, x: b.x, y: b.y, z: b.z + 1 });
-				g.c.d = true;
-			};
-
-			b.wipe = function () {
-				g.c.style.cursor = 'default';
-				g.w.wipe ({ id: b.id });
-				g.c.wipe ({ id: b.id }, true);
-			};
-
-			b.u = function () { switch (g.e.type) {
-				case 'mousedown': b.action (); break;
-				case 'mousemove': b.active ();  break;
-				case 'resize': b.s (); break;
-			};};
-
-			b.s ();
-			g.o.push (b);
-		},
-
-		set b (b) {
 			b.id = b.id || 'button' + g.o.length;
 
 			b.a = b.a || function () { g.w.l = b.id; b.wipe (); };
@@ -444,6 +379,7 @@ g.lvl.option = function () {
 
 g.lvl.start = function () {
 	g.wipe ();
+	g.p.lvl = 'start';
 	g.c.b ('#fff');
 	g.g.b = { a: g.lvl.begin, c: { b: '#aaa', ba: '#ddd', t: '#eee', ta: '#fff' }, hk: 0.5, t: 'PLAY', w: 0.2, x: 0.5, y: 0.5, z: 1 };
 	g.g.r = { a: g.lvl.option, c: { b: 'transparent', ba: 'transparent' }, i: g.i.option, r: 0.05, wk: 1, x: 0.95, y: 0.1, z: 1 };
