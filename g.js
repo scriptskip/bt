@@ -416,19 +416,42 @@ var g = {
 
 			z.h = 0.08; z.w = 0.005; z.wk = 0.3;
 			z.i = g.i.z;
+			z.r = 0.2;
+			z.spd = 0.001;
+			z.vx = g.r (0.1, 0.9); z.vy = g.r (0.2, 0.9);
 			z.x = z.x || g.r (0.1, 0.9); z.y = z.y || g.r (0.2, 0.9); z.z = 1;
 
-			z.s = function () {
-
+			z.m = {
+				upd: function () {
+					if ((Math.abs (z.vx - z.x) > 0.01)) {
+						var px = g.o[g.p.id].x; var py = g.o[g.p.id].y;
+						var r = Math.sqrt (Math.pow (z.x - px, 2) + Math.pow (z.y - py, 2));
+						if (r < z.r) {
+							z.vx = g.o[g.p.id].x; z.vy = g.o[g.p.id].y;
+						} else {
+							px = z.vx; py = z.vy;
+							r = Math.sqrt (Math.pow (z.x - px, 2) + Math.pow (z.y - py, 2));
+						};
+						var k = z.spd / r;
+						z.x = (z.x + k * px) / (1 + k); z.y = (z.y + k * py) / (1 + k);
+						z.s ();
+					} else {
+						z.vx = g.r (0.1, 0.9); z.vy = g.r (0.2, 0.9);
+					};
+				}
 			};
 
-			z.u = function () {
+			z.s = function () {
 				g.c.wipe ({ id: z.id });
 				z.h = (z.hk) ? (z.hk * z.w * g.c.w ()) / g.c.h () : z.h;
 				z.w = (z.wk) ? (z.wk * z.h * g.c.h ()) / g.c.w () : z.w;
 				g.d ({ h: z.h, i: z.i, id: z.id, w: z.w, x: z.x - 0.5 * z.w, y: z.y - 0.5 * z.h, z: z.z });
 				g.c.d = true;
 			};
+
+			z.u = function () { switch (g.e.type) {
+				case 'tick': z.m.upd (); break;
+			};};
 			z.s ();
 			g.o.push (z);
 		}
