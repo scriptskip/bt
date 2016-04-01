@@ -298,7 +298,7 @@ var g = {
 			};
 
 			p.u = function () { switch (g.e.type) {
-				case 'mousedown': g.w.wipe ( { id: 'tb' }); g.g.t = { id: 'tb', x: p.x, y: p.y }; g.g.z = {}; break;
+				case 'mousedown': g.w.wipe ( { id: 'tb' }); g.p.ice.x = p.x; g.p.ice.y = p.y; g.g.t = { id: 'tb', x: p.x, y: p.y }; g.g.z = {}; break;
 				case 'mousemove': p.vxy (); break;
 				case 'resize': p.s (); break;
 				case 'tick': p.m.upd (); break;
@@ -381,8 +381,8 @@ var g = {
 			t.spd = 0.01;
 			t.x = t.x || 0.5; t.y = t.y || 0.5;
 
-			t.big = function () { if (t.r < 0.05) {
-				t.r += (t.r < 0.05) ? t.spd : 0;
+			t.big = function () { if (t.r < g.p.ice.r) {
+				t.r += (t.r < g.p.ice.r) ? t.spd : 0;
 				t.s ();
 			};};
 
@@ -414,16 +414,20 @@ var g = {
 		set z (z) {
 			z.id = z.id || 'zombie' + g.o.length;
 
+			z.frozen = false;
 			z.h = 0.08; z.w = 0.005; z.wk = 0.3;
 			z.i = g.i.z;
 			z.r = 0.2;
 			z.spd = 0.001;
+			z.tag = 'enemy';
 			z.vx = g.r (0.1, 0.9); z.vy = g.r (0.2, 0.9);
 			z.x = z.x || g.r (0.1, 0.9); z.y = z.y || g.r (0.2, 0.9); z.z = 1;
 
 			z.m = {
 				upd: function () {
-					if ((Math.abs (z.vx - z.x) > 0.01)) {
+					z.frozen = (g.p.ice.r * 0.5 > Math.sqrt (Math.pow (z.x - g.p.ice.x, 2) + Math.pow (z.y - g.p.ice.y, 2)));
+
+					if ((Math.abs (z.vx - z.x) > 0.01) && (!z.frozen)) {
 						var px = g.o[g.p.id].x; var py = g.o[g.p.id].y;
 						var r = Math.sqrt (Math.pow (z.x - px, 2) + Math.pow (z.y - py, 2));
 						if (r < z.r) {
@@ -474,6 +478,7 @@ var g = {
 
 	p: {
 		acc: 0.03,
+		ice: { r: 0.05, x: 0, y: 0 },
 		lvl: 'start',
 		option: false,
 		slow: 0.5,
