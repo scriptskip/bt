@@ -211,6 +211,26 @@ var g = {
 			g.o.push (b);
 		},
 
+		set bg (bg) {
+			bg.id = bg.id || 'background' + g.o.length;
+
+			bg.i = bg.i || new Image ();
+
+			bg.s = function () {
+				bg.h = 1;
+				g.c.wipe ({ id: bg.id });
+				g.d ({h: bg.h, i: bg.i, id: bg.id, w: 1, x: 0, y: 0, z: 0});
+				g.c.d = true;
+			};
+
+			bg.u = function () { switch (g.e.type) {
+				case 'resize': bg.s (); break;
+			};};
+
+			bg.s ();
+			g.o.push (bg);
+		},
+
 		set p (p)
 		{
 			p.id = p.id || 'player' + g.o.length;
@@ -230,7 +250,7 @@ var g = {
 					if (p.y < p.vy) {
 						p.move = (Math.abs (p.y - p.vy) > 0.001);
 						p.y += (p.y < 0.9) ? p.spd + Math.abs (p.y - p.vy) * p.acc : 0;
-						p.s ();
+						if (Math.abs (p.y - p.vy) > 0.001) p.s ();
 					};
 				},
 
@@ -238,7 +258,7 @@ var g = {
 					if (p.x > p.vx) {
 						p.move = (Math.abs (p.x- p.vx) > 0.001);
 						p.x -= (p.x > 0.05) ? p.spd + Math.abs (p.x - p.vx) * p.acc : 0;
-						p.s ();
+						if (Math.abs (p.x- p.vx) > 0.001) p.s ();
 					};
 				},
 
@@ -246,15 +266,15 @@ var g = {
 					if (p.x < p.vx) {
 						p.move = (Math.abs (p.x - p.vx) > 0.001);
 						p.x += (p.x < 0.95) ? p.spd + Math.abs (p.x - p.vx) * p.acc : 0;
-						p.s ();
+						if (Math.abs (p.x - p.vx) > 0.001) p.s ();
 					};
 				},
 
 				u: function () {
 					if (p.y > p.vy) {
 						p.move = (Math.abs (p.y - p.vy) > 0.001);
-						p.y -= (p.y > 0.1) ? p.spd + Math.abs (p.y - p.vy) * p.acc : 0;
-						p.s ();
+						p.y -= (p.y > 0.2) ? p.spd + Math.abs (p.y - p.vy) * p.acc : 0;
+						if (Math.abs (p.y - p.vy) > 0.001) p.s ();
 					};
 				},
 
@@ -440,7 +460,7 @@ g.l = function () {
 g.lvl.begin = function () {
 	g.wipe ();
 	g.p.lvl = 'begin';
-	g.w.document.body.style.backgroundImage = 'url(bg.svg)';
+	g.g.bg = { i: g.i.bg };
 	g.c.b ('transparent'); g.c.style.cursor = 'none';
 	g.g.r = { a: g.lvl.option, c: { b: 'transparent', ba: 'transparent' }, i: g.i.option, r: 0.025, wk: 1, x: 0.96, y: 0.05, z: 1 };
 	g.g.p = { wk: 0.4 };
