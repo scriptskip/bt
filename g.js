@@ -223,6 +223,13 @@ var g = {
 			p.z = p.z || 1;
 
 			p.m = {
+				d: function () {
+					if (p.y < p.vy) {
+						p.y += (p.y < 0.95) ? p.spd + Math.abs (p.y - p.vy) * p.acc : 0;
+						p.s ();
+					};
+				},
+
 				l: function () {
 					if (p.x > p.vx) {
 						p.x -= (p.x > 0.05) ? p.spd + Math.abs (p.x - p.vx) * p.acc : 0;
@@ -235,7 +242,14 @@ var g = {
 						p.x += (p.x < 0.95) ? p.spd + Math.abs (p.x - p.vx) * p.acc : 0;
 						p.s ();
 					};
-				}
+				},
+
+				u: function () {
+					if (p.y > p.vy) {
+						p.y -= (p.y > 0.05) ? p.spd + Math.abs (p.y - p.vy) * p.acc : 0;
+						p.s ();
+					};
+				},
 			};
 
 			p.vxy = function () {
@@ -253,7 +267,7 @@ var g = {
 			p.u = function () { switch (g.e.type) {
 				case 'mousemove': p.vxy (); break;
 				case 'resize': p.s (); break;
-				case 'tick': p.m.l (); p.m.r (); break;
+				case 'tick': p.m.d (); p.m.l (); p.m.r (); p.m.u (); break;
 			};};
 
 			p.s ();
