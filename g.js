@@ -216,8 +216,9 @@ var g = {
 			p.id = p.id || 'player' + g.o.length;
 
 			p.acc = 0.05; p.spd = p.spd || 0.001;
-			p.h = p.h || 0.075; p.w = p.w || 0.05;
+			p.h = p.h || 0.075; p.hd = p.h; p.w = p.w || 0.05;
 			p.i = p.i || g.i.p;
+			p.move = false;
 			p.step = 0;
 			p.steps = [g.i.p, g.i.p_m, g.i.p_m_s];
 			p.vx = 0.5; p.vy = 0.5;
@@ -227,6 +228,7 @@ var g = {
 			p.m = {
 				d: function () {
 					if (p.y < p.vy) {
+						p.move = (Math.abs (p.y - p.vy) > 0.001);
 						p.y += (p.y < 0.9) ? p.spd + Math.abs (p.y - p.vy) * p.acc : 0;
 						p.s ();
 					};
@@ -234,6 +236,7 @@ var g = {
 
 				l: function () {
 					if (p.x > p.vx) {
+						p.move = (Math.abs (p.x- p.vx) > 0.001);
 						p.x -= (p.x > 0.05) ? p.spd + Math.abs (p.x - p.vx) * p.acc : 0;
 						p.s ();
 					};
@@ -241,6 +244,7 @@ var g = {
 
 				r: function () {
 					if (p.x < p.vx) {
+						p.move = (Math.abs (p.x - p.vx) > 0.001);
 						p.x += (p.x < 0.95) ? p.spd + Math.abs (p.x - p.vx) * p.acc : 0;
 						p.s ();
 					};
@@ -248,19 +252,23 @@ var g = {
 
 				u: function () {
 					if (p.y > p.vy) {
+						p.move = (Math.abs (p.y - p.vy) > 0.001);
 						p.y -= (p.y > 0.1) ? p.spd + Math.abs (p.y - p.vy) * p.acc : 0;
 						p.s ();
 					};
 				},
 
 				upd: function () {
+					if (p.move) {
+						p.i = p.steps[Math.floor (p.step)];
+						p.step = (p.step > p.steps.length - 1) ? 0: p.step + 0.9;
+						p.move = false;
+					};
 					p.m.d (); p.m.l (); p.m.r (); p.m.u ();
 				}
 			};
 
 			p.vxy = function () {
-				p.i = p.steps[p.step];
-				p.step = (p.step == p.steps.length - 1) ? 0: p.step + 1;
 				p.vx = g.e.x / g.c.w (); p.vy = g.e.y / g.c.h ();
 			};
 
@@ -420,6 +428,7 @@ var g = {
 };
 
 g.i.l = {
+	bg: 'bg.svg',
 	p: 'p.svg', p_b: 'p_b.svg', p_m: 'p_m.svg', p_m_s: 'p_m_s.svg',
 	option: 'option.svg'
 };
@@ -431,7 +440,8 @@ g.l = function () {
 g.lvl.begin = function () {
 	g.wipe ();
 	g.p.lvl = 'begin';
-	g.c.b ('#bbb'); g.c.style.cursor = 'none';
+	g.w.document.body.style.backgroundImage = 'url(bg.svg)';
+	g.c.b ('transparent'); g.c.style.cursor = 'none';
 	g.g.r = { a: g.lvl.option, c: { b: 'transparent', ba: 'transparent' }, i: g.i.option, r: 0.025, wk: 1, x: 0.96, y: 0.05, z: 1 };
 	g.g.p = { wk: 0.4 };
 };
