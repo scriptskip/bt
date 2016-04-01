@@ -233,9 +233,9 @@ var g = {
 
 		set p (p)
 		{
-			p.id = p.id || 'player' + g.o.length;
+			p.id = p.id || 'player' + g.o.length; g.p.id = g.o.length;
 
-			p.acc = 0.05; p.spd = p.spd || 0.001;
+			p.acc = g.p.acc; p.spd = p.spd || g.p.spd;
 			p.h = p.h || 0.075; p.hd = p.h; p.w = p.w || 0.05;
 			p.i = p.i || g.i.p;
 			p.move = false;
@@ -250,7 +250,7 @@ var g = {
 					if (p.y < p.vy) {
 						p.move = (Math.abs (p.y - p.vy) > 0.001);
 						p.y += (p.y < 0.9) ? p.spd + Math.abs (p.y - p.vy) * p.acc : 0;
-						if (Math.abs (p.y - p.vy) > 0.001) p.s ();
+						if (Math.abs (p.y - p.vy) > 5 / g.c.h ()) p.s ();
 					};
 				},
 
@@ -258,7 +258,7 @@ var g = {
 					if (p.x > p.vx) {
 						p.move = (Math.abs (p.x- p.vx) > 0.001);
 						p.x -= (p.x > 0.05) ? p.spd + Math.abs (p.x - p.vx) * p.acc : 0;
-						if (Math.abs (p.x- p.vx) > 0.001) p.s ();
+						if (Math.abs (p.x- p.vx) > 5 / g.c.w ()) p.s ();
 					};
 				},
 
@@ -266,7 +266,7 @@ var g = {
 					if (p.x < p.vx) {
 						p.move = (Math.abs (p.x - p.vx) > 0.001);
 						p.x += (p.x < 0.95) ? p.spd + Math.abs (p.x - p.vx) * p.acc : 0;
-						if (Math.abs (p.x - p.vx) > 0.001) p.s ();
+						if (Math.abs (p.x - p.vx) > 5 / g.c.w ()) p.s ();
 					};
 				},
 
@@ -274,7 +274,7 @@ var g = {
 					if (p.y > p.vy) {
 						p.move = (Math.abs (p.y - p.vy) > 0.001);
 						p.y -= (p.y > 0.2) ? p.spd + Math.abs (p.y - p.vy) * p.acc : 0;
-						if (Math.abs (p.y - p.vy) > 0.001) p.s ();
+						if (Math.abs (p.y - p.vy) > 5 / g.c.h ()) p.s ();
 					};
 				},
 
@@ -391,14 +391,26 @@ var g = {
 				t.s ();
 			};};
 
+			t.slow = function () {
+				var px = g.o[g.p.id].x; var py = g.o[g.p.id].y;
+				var r = Math.sqrt (Math.pow (t.x - px, 2) + Math.pow (t.y - py, 2));
+				if (r < t.r) {
+					g.o[g.p.id].acc = g.p.acc * g.p.slow;
+					g.o[g.p.id].spd = g.p.spd * g.p.slow;
+				} else {
+					g.o[g.p.id].acc = g.p.acc;
+					g.o[g.p.id].spd = g.p.spd;
+				};
+			};
+
 			t.s = function () {
 				g.c.wipe ({ id: t.id });
-				g.d ({ f: 'rgba(255,255,255,0.2)', id: t.id, r: t.r, s: '#fff', x: t.x, y: t.y, z: 2 });
+				g.d ({ f: 'rgba(255, 255, 255, 0.2)', id: t.id, r: t.r, s: '#fff', x: t.x, y: t.y, z: 2 });
 				g.c.d = true;
 			};
 
 			t.u = function () { switch (g.e.type) {
-				case 'tick': t.big (); break;
+				case 'tick': t.big (); t.slow (); break;
 			};};
 
 			t.s ();
@@ -422,8 +434,11 @@ var g = {
 	o: [],
 
 	p: {
+		acc: 0.03,
 		lvl: 'start',
-		option: false
+		option: false,
+		slow: 0.5,
+		spd: 0.001
 	},
 
 	s: [],
@@ -468,8 +483,7 @@ var g = {
 	},
 
 	u: function () {
-		g.w.u ();
-		g.c.u ();
+		g.w.u (); g.c.u ();
 		for (var i = g.o.length; i--;) if (g.o[i]) g.o[i].u ();
 	}
 };
