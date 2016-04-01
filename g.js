@@ -206,7 +206,6 @@ var g = {
 				case 'mousemove': b.active ();  break;
 				case 'resize': b.s (); break;
 			};};
-
 			b.s ();
 			g.o.push (b);
 		},
@@ -226,13 +225,11 @@ var g = {
 			bg.u = function () { switch (g.e.type) {
 				case 'resize': bg.s (); break;
 			};};
-
 			bg.s ();
 			g.o.push (bg);
 		},
 
-		set p (p)
-		{
+		set p (p) {
 			p.id = p.id || 'player' + g.o.length; g.p.id = g.o.length;
 
 			p.acc = g.p.acc; p.spd = p.spd || g.p.spd;
@@ -301,12 +298,11 @@ var g = {
 			};
 
 			p.u = function () { switch (g.e.type) {
-				case 'mousedown': g.w.wipe ( { id: 'tb' }); g.g.t = { id: 'tb', x: p.x, y: p.y }; break;
+				case 'mousedown': g.w.wipe ( { id: 'tb' }); g.g.t = { id: 'tb', x: p.x, y: p.y }; g.g.z = {}; break;
 				case 'mousemove': p.vxy (); break;
 				case 'resize': p.s (); break;
 				case 'tick': p.m.upd (); break;
 			};};
-
 			p.s ();
 			g.o.push (p);
 		},
@@ -374,7 +370,6 @@ var g = {
 				case 'mousemove': b.active ();  break;
 				case 'resize': b.s (); break;
 			};};
-
 			b.s ();
 			g.o.push (b);
 		},
@@ -412,9 +407,30 @@ var g = {
 			t.u = function () { switch (g.e.type) {
 				case 'tick': t.big (); t.slow (); break;
 			};};
-
 			t.s ();
 			g.o.push (t);
+		},
+
+		set z (z) {
+			z.id = z.id || 'zombie' + g.o.length;
+
+			z.h = 0.08; z.w = 0.005; z.wk = 0.3;
+			z.i = g.i.z;
+			z.x = z.x || g.r (0.1, 0.9); z.y = z.y || g.r (0.2, 0.9); z.z = 1;
+
+			z.s = function () {
+
+			};
+
+			z.u = function () {
+				g.c.wipe ({ id: z.id });
+				z.h = (z.hk) ? (z.hk * z.w * g.c.w ()) / g.c.h () : z.h;
+				z.w = (z.wk) ? (z.wk * z.h * g.c.h ()) / g.c.w () : z.w;
+				g.d ({ h: z.h, i: z.i, id: z.id, w: z.w, x: z.x - 0.5 * z.w, y: z.y - 0.5 * z.h, z: z.z });
+				g.c.d = true;
+			};
+			z.s ();
+			g.o.push (z);
 		}
 	},
 
@@ -439,6 +455,18 @@ var g = {
 		option: false,
 		slow: 0.5,
 		spd: 0.001
+	},
+
+	r: function (a, b, c) {
+		var r = Math.random ();
+		if (a) {
+			if (b) {
+				if (typeof (b) == 'number') {
+					r = (c != true) ? Math.random () * (b - a) + a : Math.floor (Math.random () * (b - a + 1)) + a;
+				};
+			};
+		};
+		return r;
 	},
 
 	s: [],
@@ -491,7 +519,8 @@ var g = {
 g.i.l = {
 	bg: 'bg.svg',
 	p: 'p.svg', p_b: 'p_b.svg', p_m: 'p_m.svg', p_m_s: 'p_m_s.svg',
-	option: 'option.svg'
+	option: 'option.svg',
+	z: 'z.svg'
 };
 
 g.l = function () {
@@ -527,4 +556,3 @@ g.lvl.start = function () {
 	g.g.b = { a: g.lvl.begin, c: { b: '#aaa', ba: '#ddd', t: '#eee', ta: '#fff' }, hk: 0.5, t: 'PLAY', w: 0.2, x: 0.5, y: 0.5, z: 1 };
 	g.g.r = { a: g.lvl.option, c: { b: 'transparent', ba: 'transparent' }, i: g.i.option, r: 0.025, wk: 1, x: 0.96, y: 0.05, z: 1 };
 };
-
