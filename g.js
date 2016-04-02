@@ -229,6 +229,29 @@ var g = {
 			g.o.push (bg);
 		},
 
+		set lb (lb) {
+			lb.id = lb.id || 'leaderboard' + g.o.length;
+
+			lb.sc = '0';
+
+			lb.score = function () {
+				if (g.p.score > lb.sc) {
+					lb.sc = g.p.score; lb.s ();
+				};
+			};
+
+			lb.s = function () {
+				g.c.wipe ({ id: lb.id });
+				g.d ({ f: '#fff', h: 0.1, id: lb.id, t: lb.sc, w: 0.03, x: 0.5, y: 0.05, z: 2 });
+			};
+
+			lb.u = function () { switch (g.e.type) {
+				case 'tick': lb.score (); break;
+			};};
+			lb.s ();
+			g.o.push (lb);
+		},
+
 		set p (p) {
 			p.id = p.id || 'player' + g.o.length; g.p.id = g.o.length;
 
@@ -455,6 +478,7 @@ var g = {
 					if (z.frozen) { z.dmg = true; z.i = g.i.z_d; if (z.t < z.tl) z.s (); };
 
 					if (z.dmg) { z.t += g.w.i; if (z.t > z.tl) {
+						g.p.score++;
 						g.c.wipe ({ id: z.id });
 						g.w.wipe ({ id: z.id });
 					};};
@@ -462,15 +486,18 @@ var g = {
 					if ((Math.abs (z.vx - z.x) > 0.01) && (!z.frozen)) {
 						var px = g.o[g.p.id].x; var py = g.o[g.p.id].y;
 						var r = Math.sqrt (Math.pow (z.x - px, 2) + Math.pow (z.y - py, 2));
-						if (r < z.r) {
-							z.vx = g.o[g.p.id].x; z.vy = g.o[g.p.id].y;
-						} else {
-							px = z.vx; py = z.vy;
-							r = Math.sqrt (Math.pow (z.x - px, 2) + Math.pow (z.y - py, 2));
+						if (r < 0.01) { g.lvl.over (); g.e = {}; }
+						else {
+							if (r < z.r) {
+								z.vx = g.o[g.p.id].x; z.vy = g.o[g.p.id].y;
+							} else {
+								px = z.vx; py = z.vy;
+								r = Math.sqrt (Math.pow (z.x - px, 2) + Math.pow (z.y - py, 2));
+							};
+							var k = z.spd / r;
+							z.x = (z.x + k * px) / (1 + k); z.y = (z.y + k * py) / (1 + k);
+							if (z.t < z.tl) z.s ();
 						};
-						var k = z.spd / r;
-						z.x = (z.x + k * px) / (1 + k); z.y = (z.y + k * py) / (1 + k);
-						if (z.t < z.tl) z.s ();
 					} else {
 						z.vx = g.r (0.1, 0.9); z.vy = g.r (0.2, 0.9);
 					};
@@ -513,6 +540,7 @@ var g = {
 		ice: { r: 0.05, x: 0, y: 0 },
 		lvl: 'start',
 		option: false,
+		score: 0,
 		slow: 0.5,
 		spd: 0.001,
 		wave: { min: 1000, max: 5000 }
@@ -596,6 +624,7 @@ g.lvl.begin = function () {
 	g.g.r = { a: g.lvl.option, c: { b: 'transparent', ba: 'transparent' }, i: g.i.option, r: 0.025, wk: 1, x: 0.96, y: 0.05, z: 1 };
 	g.g.p = { wk: 0.4 };
 	g.g.wave = {};
+	g.g.lb = {};
 };
 
 g.lvl.option = function () {
@@ -607,13 +636,25 @@ g.lvl.option = function () {
 		g.wipe ();
 		g.p.option = true;
 		g.g.b = { a: function () { g.p.option = false; g.lvl[g.p.lvl] (); g.e = {}; }, c: { b: '#aaa', ba: '#ddd', t: '#eee', ta: '#fff' }, h: 0.1, t: 'НАЗАД', wk: 3, x: 0.5, y: 0.3, z: 1 };
-		g.g.b = { a: function () { g.p.option = false; g.lvl.start (); g.e = {}; }, c: { b: '#aaa', ba: '#ddd', t: '#eee', ta: '#fff' }, h: 0.1, t: 'ВЫЙТИ', wk: 3, x: 0.5, y: 0.425, z: 1 };
+		g.g.b = { a: function () { g.p.option = false; g.lvl.start (); g.e = {}; }, c: { b: '#aaa', ba: '#ddd', t: '#eee', ta: '#fff' }, h: 0.1, t: 'ВЫЙТИ', wk: 3, x: 0.5, y: 0.675, z: 1 };
+
+		g.g.b = { a: function () { g.p.option = false; g.p.wave = { min: 1000, max: 5000 }; g.lvl[g.p.lvl] (); g.e = {}; }, c: { b: '#aba', ba: '#bdb', t: '#eee', ta: '#fff' }, h: 0.1, t: 'ЛЕГКО', wk: 3, x: 0.5, y: 0.425, z: 1 };
+		g.g.b = { a: function () { g.p.option = false; g.p.wave = { min: 500, max: 1000 }; g.lvl[g.p.lvl] (); g.e = {}; }, c: { b: '#baa', ba: '#dbb', t: '#eee', ta: '#fff' }, h: 0.1, t: 'СЛОЖНА', wk: 3, x: 0.5, y: 0.55, z: 1 };
 	};
+};
+
+g.lvl.over = function () {
+	g.wipe ();
+	g.p.lvl = 'start';
+	g.c.b ('#000');
+	g.d ({ f: '#fff', t: 'ПРОИГРАНО', x: 0.5, y: 0.5 });
+	g.c.d = true;
+	g.g.r = { a: g.lvl.option, c: { b: 'transparent', ba: 'transparent' }, i: g.i.option, r: 0.025, wk: 1, x: 0.96, y: 0.05, z: 1 };
 };
 
 g.lvl.start = function () {
 	g.wipe ();
-	g.p.lvl = 'start';
+	g.p.lvl = 'start'; g.p.score = 0;
 	g.c.b ('#fff');
 	g.g.b = { a: g.lvl.begin, c: { b: '#aaa', ba: '#ddd', t: '#eee', ta: '#fff' }, hk: 0.5, t: 'PLAY', w: 0.2, x: 0.5, y: 0.5, z: 1 };
 	g.g.r = { a: g.lvl.option, c: { b: 'transparent', ba: 'transparent' }, i: g.i.option, r: 0.025, wk: 1, x: 0.96, y: 0.05, z: 1 };
