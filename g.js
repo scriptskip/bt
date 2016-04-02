@@ -427,6 +427,8 @@ var g = {
 				upd: function () {
 					z.frozen = (g.p.ice.r * 0.5 > Math.sqrt (Math.pow (z.x - g.p.ice.x, 2) + Math.pow (z.y - g.p.ice.y, 2)));
 
+					if (z.frozen) { z.i = g.i.z_d; z.s (); };
+
 					if ((Math.abs (z.vx - z.x) > 0.01) && (!z.frozen)) {
 						var px = g.o[g.p.id].x; var py = g.o[g.p.id].y;
 						var r = Math.sqrt (Math.pow (z.x - px, 2) + Math.pow (z.y - py, 2));
@@ -504,7 +506,7 @@ var g = {
 			w.d = w.document;
 			w.d.b = w.d.body;
 			w.h = w.innerHeight;
-			w.i = 40;
+			w.i = 50;
 			w.t = 0;
 			w.w = w.innerWidth;
 
@@ -548,7 +550,7 @@ g.i.l = {
 	bg: 'bg.svg',
 	p: 'p.svg', p_b: 'p_b.svg', p_m: 'p_m.svg', p_m_s: 'p_m_s.svg',
 	option: 'option.svg',
-	z: 'z.svg'
+	z: 'z.svg', z_d: 'z_d.svg'
 };
 
 g.l = function () {
