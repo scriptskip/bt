@@ -412,7 +412,7 @@ var g = {
 		},
 
 		set z (z) {
-			z.id = z.id || 'zombie' + g.o.length;
+			z.id = z.id || 'zombie' + g.o.length + g.r (1, 100, true);
 
 			z.dmg = false;
 			z.frozen = false;
