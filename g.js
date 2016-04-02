@@ -629,7 +629,7 @@ g.l = function () {
 
 g.lvl.begin = function () {
 	g.wipe ();
-	g.p.lvl = 'begin';
+	g.p.lvl = 'begin'; g.w.t = 0;
 	g.w.d.b.style.backgroundImage = 'url(bg.svg)';
 	g.c.b ('transparent'); g.c.style.cursor = 'none';
 	g.g.r = { a: g.lvl.option, c: { b: 'transparent', ba: 'transparent' }, i: g.i.option, r: 0.025, wk: 1, x: 0.96, y: 0.05, z: 1 };
