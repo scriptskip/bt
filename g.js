@@ -298,7 +298,7 @@ var g = {
 			};
 
 			p.u = function () { switch (g.e.type) {
-				case 'mousedown': g.w.wipe ( { id: 'tb' }); g.p.ice.x = p.x; g.p.ice.y = p.y; g.g.t = { id: 'tb', x: p.x, y: p.y }; g.g.z = {}; break;
+				case 'mousedown': g.w.wipe ( { id: 'tb' }); g.p.ice.x = p.x; g.p.ice.y = p.y; g.g.t = { id: 'tb', x: p.x, y: p.y }; break;
 				case 'mousemove': p.vxy (); break;
 				case 'resize': p.s (); break;
 				case 'tick': p.m.upd (); break;
@@ -411,6 +411,28 @@ var g = {
 			g.o.push (t);
 		},
 
+		set wave (w) {
+			w.id = w.id || 'wave' + g.o.length;
+
+			w.t = 0;
+			w.ta = g.r (1000, 2000, true);
+
+			w.blowout = function () {
+				w.t += g.w.i;
+				if (w.t > w.ta) {
+					w.t = 0;
+					w.ta = g.r (g.p.wave.min, g.p.wave.max, true);
+					g.g.z = {};
+				};
+			};
+
+			w.u = function () { switch (g.e.type) {
+				case 'tick': w.blowout (); break;
+			};};
+
+			g.o.push (w);
+		},
+
 		set z (z) {
 			z.id = z.id || 'zombie' + g.o.length + g.r (1, 100, true);
 
@@ -492,7 +514,8 @@ var g = {
 		lvl: 'start',
 		option: false,
 		slow: 0.5,
-		spd: 0.001
+		spd: 0.001,
+		wave: { min: 1000, max: 5000 }
 	},
 
 	r: function (a, b, c) {
@@ -572,6 +595,7 @@ g.lvl.begin = function () {
 	g.c.b ('transparent'); g.c.style.cursor = 'none';
 	g.g.r = { a: g.lvl.option, c: { b: 'transparent', ba: 'transparent' }, i: g.i.option, r: 0.025, wk: 1, x: 0.96, y: 0.05, z: 1 };
 	g.g.p = { wk: 0.4 };
+	g.g.wave = {};
 };
 
 g.lvl.option = function () {
