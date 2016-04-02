@@ -467,7 +467,7 @@ var g = {
 			z.spd = 0.001;
 			z.t = 0;
 			z.tag = 'enemy';
-			z.tl = 2000;
+			z.tl = 500;
 			z.vx = g.r (0.1, 0.9); z.vy = g.r (0.2, 0.9);
 			z.x = z.x || g.r (0.1, 0.9); z.y = z.y || g.r (0.2, 0.9); z.z = 1;
 
