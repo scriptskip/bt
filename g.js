@@ -242,7 +242,7 @@ var g = {
 
 			lb.s = function () {
 				g.c.wipe ({ id: lb.id });
-				g.d ({ f: '#fff', h: 0.1, id: lb.id, t: lb.sc, w: 0.03, x: 0.5, y: 0.05, z: 2 });
+				g.d ({ f: '#fff', h: 0.1, id: lb.id, t: lb.sc, x: 0.5, y: 0.05, z: 2 });
 			};
 
 			lb.u = function () { switch (g.e.type) {
