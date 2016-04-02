@@ -1,4 +1,12 @@
 var g = {
+	a: {
+		p: function (a) {
+			var a = new Audio (a.src);
+				a.volume = a.volume || 1;
+			a.play ();
+		}
+	},
+
 	c: function () {
 		var c = g.w.d.createElement ('canvas');
 			c.c = c.getContext ('2d');
@@ -158,7 +166,7 @@ var g = {
 			b.over = false;
 			b.z = b.z || 0;
 
-			b.action = function () { if (b.detect ()) { b.a (); }; };
+			b.action = function () { if (b.detect ()) { b.a (); g.a.p ({ src: 'tk.ogg' }); }; };
 
 			b.active = function () {
 				if (b.detect ()) {
@@ -243,10 +251,12 @@ var g = {
 			lb.s = function () {
 				g.c.wipe ({ id: lb.id });
 				g.d ({ f: '#fff', h: 0.1, id: lb.id, t: lb.sc, x: 0.5, y: 0.05, z: 2 });
+				g.c.d = true;
 			};
 
 			lb.u = function () { switch (g.e.type) {
 				case 'tick': lb.score (); break;
+				case 'resize': lb.s (); break;
 			};};
 			lb.s ();
 			g.o.push (lb);
@@ -321,7 +331,7 @@ var g = {
 			};
 
 			p.u = function () { switch (g.e.type) {
-				case 'mousedown': g.w.wipe ( { id: 'tb' }); g.p.ice.x = p.x; g.p.ice.y = p.y; g.g.t = { id: 'tb', x: p.x, y: p.y }; break;
+				case 'mousedown': g.w.wipe ( { id: 'tb' }); g.p.ice.x = p.x; g.p.ice.y = p.y; g.g.t = { id: 'tb', x: p.x, y: p.y }; g.a.p ({ src: 'pw.ogg', volume: 0.3 }); break;
 				case 'mousemove': p.vxy (); break;
 				case 'resize': p.s (); break;
 				case 'tick': p.m.upd (); break;
@@ -481,6 +491,7 @@ var g = {
 						g.p.score++;
 						g.c.wipe ({ id: z.id });
 						g.w.wipe ({ id: z.id });
+						g.a.p ({ src: 'ow.ogg' });
 					};};
 
 					if ((Math.abs (z.vx - z.x) > 0.01) && (!z.frozen)) {
@@ -667,6 +678,7 @@ g.lvl.over = function () {
 	g.d ({ f: '#8c8', h: 0.1, t: rang, ta: 'left', x: 0.5, y: 0.68 });
 	g.c.d = true;
 	g.g.r = { a: g.lvl.option, c: { b: 'transparent', ba: 'transparent' }, i: g.i.option, r: 0.025, wk: 1, x: 0.96, y: 0.05, z: 1 };
+	g.a.p ({ src: 'over.ogg' });
 };
 
 g.lvl.start = function () {
