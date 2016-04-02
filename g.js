@@ -414,12 +414,15 @@ var g = {
 		set z (z) {
 			z.id = z.id || 'zombie' + g.o.length;
 
+			z.dmg = false;
 			z.frozen = false;
 			z.h = 0.08; z.w = 0.005; z.wk = 0.3;
 			z.i = g.i.z;
 			z.r = 0.2;
 			z.spd = 0.001;
+			z.t = 0;
 			z.tag = 'enemy';
+			z.tl = 2000;
 			z.vx = g.r (0.1, 0.9); z.vy = g.r (0.2, 0.9);
 			z.x = z.x || g.r (0.1, 0.9); z.y = z.y || g.r (0.2, 0.9); z.z = 1;
 
@@ -427,7 +430,12 @@ var g = {
 				upd: function () {
 					z.frozen = (g.p.ice.r * 0.5 > Math.sqrt (Math.pow (z.x - g.p.ice.x, 2) + Math.pow (z.y - g.p.ice.y, 2)));
 
-					if (z.frozen) { z.i = g.i.z_d; z.s (); };
+					if (z.frozen) { z.dmg = true; z.i = g.i.z_d; if (z.t < z.tl) z.s (); };
+
+					if (z.dmg) { z.t += g.w.i; if (z.t > z.tl) {
+						g.c.wipe ({ id: z.id });
+						g.w.wipe ({ id: z.id });
+					};};
 
 					if ((Math.abs (z.vx - z.x) > 0.01) && (!z.frozen)) {
 						var px = g.o[g.p.id].x; var py = g.o[g.p.id].y;
@@ -440,7 +448,7 @@ var g = {
 						};
 						var k = z.spd / r;
 						z.x = (z.x + k * px) / (1 + k); z.y = (z.y + k * py) / (1 + k);
-						z.s ();
+						if (z.t < z.tl) z.s ();
 					} else {
 						z.vx = g.r (0.1, 0.9); z.vy = g.r (0.2, 0.9);
 					};
